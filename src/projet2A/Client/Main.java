@@ -1,4 +1,12 @@
+/**
+ * Classe principale du client
+ * 
+ * @author FAUVERNIER Louis, MENET Nicolas
+ */
+
 package projet2A.Client;
+
+import projet2A.Fichier;
 
 public class Main {
 
