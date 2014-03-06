@@ -6,10 +6,7 @@
 
 package projet2A.Serveur;
 
-import java.net.ServerSocket;
 import java.net.Socket;
-
-import projet2A.commonFiles.Fichier;
 
 public class ServeurOut extends Thread {
 	private String Name;

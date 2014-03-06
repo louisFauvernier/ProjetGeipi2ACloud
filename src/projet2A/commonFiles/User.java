@@ -7,8 +7,8 @@
 package projet2A.commonFiles;
 
 public class User {
-	String id;
-	String password;
+	private String id;
+	private String password;
 	
 	public User(String id, String password) {
 		this.id = id;

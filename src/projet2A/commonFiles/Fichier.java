@@ -16,9 +16,9 @@ import java.util.zip.Checksum;
 
 public class Fichier extends File implements Serializable{
 	private static final long serialVersionUID = 7154639632477217376L;
-	long crc32=0;
-	int version=0;
-	byte[] contenu;
+	private long crc32=0;
+	private int version=0;
+	private byte[] contenu;
 	
 	public Fichier(String name) throws IOException{
 		super(name);
