@@ -4,7 +4,7 @@
  * @author FAUVERNIER Louis, MENET Nicolas
  */
 
-package projet2A;
+package projet2A.commonFiles;
 
 import java.io.BufferedInputStream;
 import java.io.File;

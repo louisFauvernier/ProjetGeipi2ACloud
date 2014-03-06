@@ -6,8 +6,6 @@
 
 package projet2A.Serveur;
 
-import projet2A.Fichier;
-
 public class Main{
 
 	public static void main(String[] args) {

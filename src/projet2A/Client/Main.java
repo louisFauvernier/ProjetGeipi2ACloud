@@ -6,7 +6,7 @@
 
 package projet2A.Client;
 
-import projet2A.Fichier;
+import projet2A.commonFiles.Fichier;
 
 public class Main {
 
