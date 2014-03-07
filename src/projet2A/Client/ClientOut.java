@@ -7,6 +7,8 @@
 
 package projet2A.Client;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import projet2A.commonFiles.Fichier;
@@ -38,11 +40,30 @@ public class ClientOut extends Thread{
 	}
 	
 	public void run(){
-		// TODO
+		try {
+			socket = new Socket("127.0.0.1", i);
+			PrintWriter out = new PrintWriter(socket.getOutputStream());
+			out.println("Test");
+			out.flush();
+			sleep(1000);
+			out.println("hallo");
+			out.flush();
+			sleep(1000);
+			out.println("close_connexion");
+			out.flush();
+			out.close();
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
-	 * Création d'un objet fichier (uniquement pour un nouveau fichier)
+	 * Crï¿½ation d'un objet fichier (uniquement pour un nouveau fichier)
 	 * @param name Nom du fichier
 	 * @return objet correspondant au fichier
 	 */

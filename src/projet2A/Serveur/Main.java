@@ -9,8 +9,8 @@ package projet2A.Serveur;
 public class Main{
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		ServeurIn sin = new ServeurIn("Serveur", 8080);
+		sin.start();
 	}
 
 }

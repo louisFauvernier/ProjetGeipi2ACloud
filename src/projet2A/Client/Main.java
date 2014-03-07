@@ -6,13 +6,10 @@
 
 package projet2A.Client;
 
-import projet2A.commonFiles.Fichier;
-
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		ClientOut cout = new ClientOut("Client");
+		cout.start();
 	}
-
 }
