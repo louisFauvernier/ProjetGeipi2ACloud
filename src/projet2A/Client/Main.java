@@ -12,10 +12,9 @@ import java.net.UnknownHostException;
 public class Main {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
+		ClientOut cout = new ClientOut("127.0.0.1");
+		cout.start();
 		ClientIn cin = new ClientIn(8081);
 		cin.start();
-		ClientOut cout = new ClientOut("Client");
-		cout.start();
-		cin.stop();
 	}
 }

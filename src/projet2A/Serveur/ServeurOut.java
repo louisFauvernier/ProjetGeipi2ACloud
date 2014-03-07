@@ -23,7 +23,7 @@ public class ServeurOut {
 		this.Name = name;
 		this.Port = port;
 		try {
-			s = new Socket(name, port+1);
+			s = new Socket(name, port);
 			out = new PrintWriter(s.getOutputStream());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

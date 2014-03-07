@@ -37,7 +37,7 @@ public class ServeurIn extends Thread {
 			try {
 				s = socket.accept();
 				System.out.println("Client Connecté");
-				sout = new ServeurOut(s.getInetAddress().getHostAddress(),s.getPort());
+				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
 				String message_distant = "";
 				BufferedReader in = new BufferedReader (new InputStreamReader (s.getInputStream()));
 				while(!(message_distant = in.readLine()).equals("close_connexion")){
