@@ -4,7 +4,6 @@
  * @author FAUVERNIER Louis, MENET Nicolas
  */
 
-
 package projet2A.Client;
 
 import java.io.IOException;
@@ -41,7 +40,7 @@ public class ClientOut extends Thread{
 	
 	public void run(){
 		try {
-			socket = new Socket("127.0.0.1", i);
+			socket = new Socket(name, i);
 			PrintWriter out = new PrintWriter(socket.getOutputStream());
 			out.println("Test");
 			out.flush();
@@ -63,7 +62,7 @@ public class ClientOut extends Thread{
 	}
 	
 	/**
-	 * Crï¿½ation d'un objet fichier (uniquement pour un nouveau fichier)
+	 * Création d'un objet fichier (uniquement pour un nouveau fichier)
 	 * @param name Nom du fichier
 	 * @return objet correspondant au fichier
 	 */

@@ -19,6 +19,7 @@ public class ServeurIn extends Thread {
 	private int Port;
 	private ServerSocket socket;
 	private Socket s;
+	private ServeurOut sout;
 	
 	public ServeurIn(String name, int port){
 		this.Name = name;
@@ -36,6 +37,7 @@ public class ServeurIn extends Thread {
 			try {
 				s = socket.accept();
 				System.out.println("Client Connecté");
+				sout = new ServeurOut(s.getInetAddress().getHostAddress(),s.getPort());
 				String message_distant = "";
 				BufferedReader in = new BufferedReader (new InputStreamReader (s.getInputStream()));
 				while(!(message_distant = in.readLine()).equals("close_connexion")){
@@ -46,8 +48,7 @@ public class ServeurIn extends Thread {
 			} catch (IOException e) {
 				System.out.print("[-] ERREUR : ");
 				e.printStackTrace();
-			}
-			
+			}			
 		}
 	}
 	
@@ -57,6 +58,7 @@ public class ServeurIn extends Thread {
 	 */
 	public void traitementDemande(String msg){
 		System.out.println("Client ask : " + msg);
+		sout.sendMessage("ok");
 	}
 	
 	/**

@@ -12,5 +12,4 @@ public class Main{
 		ServeurIn sin = new ServeurIn("Serveur", 8080);
 		sin.start();
 	}
-
 }

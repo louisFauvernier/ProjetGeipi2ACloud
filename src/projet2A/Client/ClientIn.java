@@ -4,28 +4,39 @@
  * @author FAUVERNIER Louis, MENET Nicolas
  */
 
-
 package projet2A.Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import projet2A.commonFiles.Fichier;
 
 public class ClientIn extends Thread {
-	private Socket socket;
+	private ServerSocket socket;
+	private Socket s;
 	private BufferedReader in;
+	private String message_distant = "";
 	
-	public ClientIn(String serverIp, int i) throws UnknownHostException, IOException{
-		socket = new Socket(serverIp, i);
-		in = new BufferedReader (new InputStreamReader (socket.getInputStream()));
+	public ClientIn(int i) throws UnknownHostException, IOException{
+		socket = new ServerSocket(i);
+		s = socket.accept();
+		in = new BufferedReader (new InputStreamReader (s.getInputStream()));
 	}
 	
 	public void run(){
-		// TODO
+		while(true){
+			try {
+				message_distant = in.readLine();
+				System.out.println(message_distant);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}
 	}
 	
 	/**

@@ -1,25 +1,37 @@
 /**
- * Classe ServeurOut
+ * Classe ServeurOut : Communication vers le client
  * 
  * @author FAUVERNIER Louis, MENET Nicolas
  */
 
 package projet2A.Serveur;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
-public class ServeurOut extends Thread {
+public class ServeurOut {
 	private String Name;
 	private int Port;
 	private Socket s;
+	private PrintWriter out;
 	
 	public ServeurOut(String name, int port){
 		this.Name = name;
 		this.Port = port;
-	}
-	
-	public void run(){
-		// TODO
+		try {
+			s = new Socket(name, port+1);
+			out = new PrintWriter(s.getOutputStream());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -44,7 +56,7 @@ public class ServeurOut extends Thread {
 	 * @param message : Message à envoyer
 	 */
 	public void sendMessage(String message){
-		// TODO
+		out.println(message);
+		out.flush();
 	}
-
 }
