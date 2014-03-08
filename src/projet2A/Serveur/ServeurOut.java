@@ -6,24 +6,18 @@
 
 package projet2A.Serveur;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ServeurOut {
-	private String Name;
-	private int Port;
 	private Socket s;
 	private PrintWriter out;
 	
-	public ServeurOut(String name, int port){
-		this.Name = name;
-		this.Port = port;
+	public ServeurOut(String adresse, int port){
 		try {
-			s = new Socket(name, port);
+			s = new Socket(adresse, port);
 			out = new PrintWriter(s.getOutputStream());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

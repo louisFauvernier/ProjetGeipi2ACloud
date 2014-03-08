@@ -14,35 +14,32 @@ import projet2A.commonFiles.Fichier;
 
 public class ClientOut extends Thread{
 	private Socket socket;
-	private int i = 8080;
-	private String name;
+	private int port = 8080;
+	private String adresse;
 	
-	public ClientOut(String name) {
-		this.name = name;
+	public ClientOut(String adresse) {
+		this.adresse = adresse;
 	}
-	public ClientOut(int port, String name) {
-		this.i = port;
-		this.name = name;
+	public ClientOut(int port, String adresse) {
+		this.port = port;
+		this.adresse = adresse;
 	}
 	
 	public Socket getSocket() {
 		return socket;
 	}
-	public void setSocket(Socket socket) {
-		this.socket = socket;
+	public int getPort() {
+		return port;
 	}
-	public int getI() {
-		return i;
-	}
-	public void setI(int i) {
-		this.i = i;
+	public void setport(int port) {
+		this.port = port;
 	}
 	
 	public void run(){
 		int nbtest = 5;
 		while(nbtest>0){ //Tentative de 5 connexions au maximum
 			try {
-				socket = new Socket(name, i);
+				socket = new Socket(adresse, port);
 				System.out.println("[+] INFO : Connecté au serveur");
 				break;
 			} catch (IOException e) {
@@ -57,7 +54,7 @@ public class ClientOut extends Thread{
 			}
 		}
 		if(socket == null){
-			System.out.println("[!] FATAL  : Impossible d'établir la connexion au serveur"); //Echec des 5 tentatives, arrêt du programme;
+			System.out.println("[!] FATAL  : Impossible d'établir la connexion au serveur " + this.adresse); //Echec des 5 tentatives, arrêt du programme;
 			System.exit(0);
 		}					
 		try{
