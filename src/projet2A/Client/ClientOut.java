@@ -39,8 +39,28 @@ public class ClientOut extends Thread{
 	}
 	
 	public void run(){
-		try {
-			socket = new Socket(name, i);
+		int nbtest = 5;
+		while(nbtest>0){ //Tentative de 5 connexions au maximum
+			try {
+				socket = new Socket(name, i);
+				System.out.println("[+] INFO : Connecté au serveur");
+				break;
+			} catch (IOException e) {
+				System.out.println("[-] ERREUR : " + e.getMessage() + ", Nouvel essai dans 5 secondes...");
+				try {
+					sleep(5000); //Pause de 5 secondes avant nouvel essais
+					nbtest--;
+				} catch (InterruptedException e1) {
+					System.out.println("[!] FATAL  : " + e1.getMessage());
+					System.exit(0);
+				}
+			}
+		}
+		if(socket == null){
+			System.out.println("[!] FATAL  : Impossible d'établir la connexion au serveur"); //Echec des 5 tentatives, arrêt du programme;
+			System.exit(0);
+		}					
+		try{
 			PrintWriter out = new PrintWriter(socket.getOutputStream());
 			out.println("Test");
 			out.flush();
@@ -52,9 +72,12 @@ public class ClientOut extends Thread{
 			out.flush();
 			out.close();
 			socket.close();
+			System.out.println("[+] INFO : Déconnecté du serveur");
+			System.exit(0);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("[!] FATAL  : " + e.getMessage());
 			e.printStackTrace();
+			System.exit(0);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

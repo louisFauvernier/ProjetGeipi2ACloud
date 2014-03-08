@@ -31,10 +31,11 @@ public class ClientIn extends Thread {
 		while(true){
 			try {
 				message_distant = in.readLine();
-				System.out.println(message_distant);
+				System.out.println("Message du serveur : " + message_distant);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.exit(0);
 			}			
 		}
 	}

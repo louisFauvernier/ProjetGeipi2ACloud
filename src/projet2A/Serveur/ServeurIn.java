@@ -15,19 +15,18 @@ import java.net.Socket;
 import projet2A.commonFiles.Fichier;
 
 public class ServeurIn extends Thread {
-	private String Name;
 	private int Port;
 	private ServerSocket socket;
 	private Socket s;
 	private ServeurOut sout;
 	
-	public ServeurIn(String name, int port){
-		this.Name = name;
+	public ServeurIn(int port){
 		this.Port = port;
 	}
 	
 	public void run(){
 		try {
+			System.out.println("[+] INFO : Lancement du serveur");
 			socket = new ServerSocket(this.Port);
 		} catch (IOException e) {
 			System.out.print("[-] ERREUR : ");
@@ -36,7 +35,7 @@ public class ServeurIn extends Thread {
 		while(true){
 			try {
 				s = socket.accept();
-				System.out.println("Client Connecté");
+				System.out.println("[+] INFO : Client Connecté");
 				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
 				String message_distant = "";
 				BufferedReader in = new BufferedReader (new InputStreamReader (s.getInputStream()));
@@ -44,7 +43,7 @@ public class ServeurIn extends Thread {
 					traitementDemande(message_distant);
 				}
 				s.close();
-				System.out.println("Client déconnecté");
+				System.out.println("[+] INFO : Client déconnecté");
 			} catch (IOException e) {
 				System.out.print("[-] ERREUR : ");
 				e.printStackTrace();
@@ -57,7 +56,7 @@ public class ServeurIn extends Thread {
 	 * @param msg
 	 */
 	public void traitementDemande(String msg){
-		System.out.println("Client ask : " + msg);
+		System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
 		sout.sendMessage("ok");
 	}
 	
