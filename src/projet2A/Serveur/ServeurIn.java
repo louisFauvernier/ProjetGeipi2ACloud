@@ -54,8 +54,10 @@ public class ServeurIn extends Thread {
 	
 	public String connected() throws IOException{
 		String message = in.readLine();
-		if(message == null)
+		if(message == null){
+			System.out.println("[-] ERREUR : Perte de connexion avec le client");
 			return "close_connexion";
+		}
 		else
 			return message;
 	}
