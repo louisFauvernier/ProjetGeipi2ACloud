@@ -6,6 +6,7 @@
 
 package projet2A.Client;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -61,12 +62,12 @@ public class ClientOut extends Thread{
 		}
 		try{
 			PrintWriter out = new PrintWriter(socket.getOutputStream());
-			out.println("Test");
-			out.flush();
-			sleep(1000);
-			out.println("hallo");
-			out.flush();
-			sleep(1000);
+			String[] listeFichiers = listeFichiers("files");
+			for(int i=0;i<listeFichiers.length;i++){
+				out.println(listeFichiers[i]);
+				out.flush();
+				sleep(1000);
+			}
 			out.println("close_connexion");
 			out.flush();
 			out.close();
@@ -99,5 +100,9 @@ public class ClientOut extends Thread{
 	 */
 	public void sendFile(Fichier f){
 		// TODO
-	}	
+	}
+	
+	public String[] listeFichiers(String répertoire){
+		return new File(répertoire).list();
+	}
 }
