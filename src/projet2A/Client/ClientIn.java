@@ -21,10 +21,20 @@ public class ClientIn extends Thread {
 	private BufferedReader in;
 	private String message_distant = "";
 	
-	public ClientIn(int i) throws UnknownHostException, IOException{
-		socket = new ServerSocket(i);
-		s = socket.accept();
-		in = new BufferedReader (new InputStreamReader (s.getInputStream()));
+	public ClientIn(int i){
+		try {
+			socket = new ServerSocket(i);
+			s = socket.accept();
+		} catch (IOException e) {
+			System.out.println("[!] FATAL  : " + e.getMessage());
+			System.exit(0);
+		}
+		try {
+			in = new BufferedReader (new InputStreamReader (s.getInputStream()));
+		} catch (IOException e) {
+			System.out.println("[-] Erreur : ");
+			e.printStackTrace();
+		}
 	}
 	
 	public void run(){

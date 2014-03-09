@@ -30,8 +30,8 @@ public class ServeurIn extends Thread {
 			System.out.println("[+] INFO : Lancement du serveur");
 			socket = new ServerSocket(this.Port);
 		} catch (IOException e) {
-			System.out.print("[-] ERREUR : ");
-			e.printStackTrace();
+			System.out.print("[!] FATAL  : " + e.getMessage());
+			System.exit(0);
 		}
 		while(true){
 			try {
