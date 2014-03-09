@@ -34,6 +34,7 @@ public class ServeurIn extends Thread {
 			System.exit(0);
 		}
 		while(true){
+			System.out.println("[+] INFO : En attente d'un client");
 			try {
 				s = socket.accept();
 				System.out.println("[+] INFO : Client Connecté");
