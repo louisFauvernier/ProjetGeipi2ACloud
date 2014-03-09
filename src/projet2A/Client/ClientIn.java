@@ -28,16 +28,42 @@ public class ClientIn extends Thread {
 	}
 	
 	public void run(){
-		while(true){
+		try {
+			while(!(message_distant = connected()).equals("close_connexion")){
+				traitementDemande(message_distant);
+			}
+			s.close();
+			System.exit(0);
+		} catch (IOException e) {
+			System.out.println("[-] Erreur : ");
+			e.printStackTrace();
 			try {
-				message_distant = in.readLine();
-				System.out.println("Message du serveur : " + message_distant);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.exit(0);
-			}			
+				s.close();
+			} catch (IOException e1) {
+				System.out.println("[-] Erreur : ");
+				e1.printStackTrace();
+			}
 		}
+	}
+	
+	/**
+	 * Fonction de test pour savoir si le client est toujours connecté
+	 * 
+	 * @return message envoyé par le client ou si perte de connexion, demande de fermeture de connexion
+	 * @throws IOException
+	 */
+	public String connected() throws IOException{
+		String message = in.readLine();
+		if(message == null){ // Si message == null, alors perte de connexion avec le client
+			System.out.println("[-] ERREUR : Perte de connexion avec le serveur");
+			return "close_connexion";
+		}
+		else
+			return message; //Sinon on retourne le message envoyé par le client pour le traiter
+	}
+	
+	public void traitementDemande(String message_distant){
+		System.out.println("Message du serveur : " + message_distant);
 	}
 	
 	/**

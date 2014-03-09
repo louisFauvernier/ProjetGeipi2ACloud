@@ -52,17 +52,23 @@ public class ServeurIn extends Thread {
 		}
 	}
 	
+	/**
+	 * Fonction de test pour savoir si le client est toujours connecté
+	 * 
+	 * @return message envoyé par le client ou si perte de connexion, demande de fermeture de connexion
+	 * @throws IOException
+	 */
 	public String connected() throws IOException{
 		String message = in.readLine();
-		if(message == null){
+		if(message == null){ // Si message == null, alors perte de connexion avec le client
 			System.out.println("[-] ERREUR : Perte de connexion avec le client");
 			return "close_connexion";
 		}
 		else
-			return message;
+			return message; //Sinon on retourne le message envoyé par le client pour le traiter
 	}
 	/**
-	 * Fonction qui traite la demande du client
+	 * Fonction qui traite la demande envoyée par le client
 	 * @param msg
 	 */
 	public void traitementDemande(String msg){
