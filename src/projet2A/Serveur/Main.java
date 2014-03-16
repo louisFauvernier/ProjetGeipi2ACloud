@@ -7,8 +7,9 @@
 package projet2A.Serveur;
 
 public class Main{
+	static ServeurIn sin;
 	public static void main(String[] args) {
-		ServeurIn sin = new ServeurIn(8080);
+		sin = new ServeurIn(8080);
 		sin.start();
 	}
 }

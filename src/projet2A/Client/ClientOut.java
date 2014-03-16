@@ -8,6 +8,7 @@ package projet2A.Client;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -17,6 +18,7 @@ public class ClientOut extends Thread{
 	private Socket socket;
 	private int port = 8080;
 	private String adresse;
+	private PrintWriter out;
 	
 	public ClientOut(String adresse) {
 		this.adresse = adresse;
@@ -61,27 +63,19 @@ public class ClientOut extends Thread{
 			}
 		}
 		try{
-			PrintWriter out = new PrintWriter(socket.getOutputStream());
-			String[] listeFichiers = listeFichiers("files");
-			for(int i=0;i<listeFichiers.length;i++){
-				out.println(listeFichiers[i]);
-				out.flush();
-				sleep(1000);
-			}
-			out.println("close_connexion");
+			out = new PrintWriter(socket.getOutputStream());
+			out.println("sync");
 			out.flush();
-			out.close();
-			socket.close();
-			System.out.println("[+] INFO : Déconnecté du serveur");
-			System.exit(0);
 		} catch (IOException e) {
 			System.out.println("[!] FATAL  : " + e.getMessage());
 			e.printStackTrace();
 			System.exit(0);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+	}
+	
+	public void close(){
+		out.println("close_connexion");
+		out.flush();
 	}
 	
 	/**
@@ -104,5 +98,11 @@ public class ClientOut extends Thread{
 	
 	public String[] listeFichiers(String répertoire){
 		return new File(répertoire).list();
+	}
+	
+	public void send() throws IOException{
+		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+		out.writeObject(Main.listeFile);
+	    out.flush();
 	}
 }

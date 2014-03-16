@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.sound.midi.SysexMessage;
+
 import projet2A.commonFiles.Fichier;
 
 public class ClientIn extends Thread {
@@ -72,6 +74,18 @@ public class ClientIn extends Thread {
 	}
 	
 	public void traitementDemande(String message_distant){
+		if(message_distant.equals("send")){
+			try {
+				Main.cout.send();
+			} catch (IOException e) {
+				System.out.println("[-] ERREUR : " + e.getMessage());
+			}
+		}
+		if(message_distant.equals("sync_ok")){
+			Main.cout.close();
+			System.out.println("Synchronisé");
+			System.exit(0);
+		}
 		System.out.println("Message du serveur : " + message_distant);
 	}
 	
