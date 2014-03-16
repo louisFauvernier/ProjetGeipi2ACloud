@@ -6,7 +6,10 @@
 
 package projet2A.commonFiles;
 
-public class User {
+import java.io.Serializable;
+
+public class User  implements Serializable{
+	private static final long serialVersionUID = 3243208518271848867L;
 	private String id;
 	private String password;
 	

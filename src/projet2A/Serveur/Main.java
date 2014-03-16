@@ -13,34 +13,35 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import projet2A.commonFiles.Fichier;
+import projet2A.commonFiles.User;
 
 public class Main{
 	static ServeurIn sin;
 	static ArrayList<String> listeFiles = new ArrayList<String>();
-	static HashMap<String, Fichier> listeFile = new HashMap<String, Fichier>();
+	static ArrayList<User> listeUsers = new ArrayList<User>();
 	
 	public static void main(String[] args) {
-		//saveFiles();
 		loadFile();
+		listeUsers.add(new User("louis", "test"));
+		//saveFiles();
 		sin = new ServeurIn(8080);
 		sin.start();
 	}
 	
 	public static void loadFile(){
+		System.out.println("[+] INFO : Chargement des Utilisateurs sur le serveur");
 		ObjectInputStream ois;
 		try {
-			File fichier =  new File("fileserv/listefichier.ser");
+			File fichier =  new File("fileserv/listeUser.ser");
 			ois = new ObjectInputStream(new FileInputStream(fichier));
-			listeFile = (HashMap<String, Fichier>)ois.readObject();
+			listeUsers = (ArrayList<User>)ois.readObject();
 	        ois.close();
 		} catch (IOException|ClassNotFoundException e) {
 			e.printStackTrace();	
 		}
+		System.out.println("[+] INFO : Chargement des fichiers présents sur le serveur");
 		try {
-			File fichier =  new File("fileserv/arraylistefichier.ser");
+			File fichier =  new File("fileserv/listeFichier.ser");
 			ois = new ObjectInputStream(new FileInputStream(fichier));
 			listeFiles = (ArrayList<String>)ois.readObject();
 	        ois.close();
@@ -51,23 +52,23 @@ public class Main{
 	
 	public static void saveFiles(){
 		try {
-			File fichier =  new File("fileserv/listefichier.ser");
-			ObjectOutputStream oos;
-			oos = new ObjectOutputStream(new FileOutputStream(fichier));
-			oos.writeObject(listeFile);
-			oos.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			File fichier =  new File("fileserv/arraylistefichier.ser");
+			File fichier =  new File("fileserv/listeFichier.ser");
 			ObjectOutputStream oos;
 			oos = new ObjectOutputStream(new FileOutputStream(fichier));
 			oos.writeObject(listeFiles);
 			oos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.print("[-] ERREUR : ");
+			e.printStackTrace();
+		}
+		try {
+			File fichier =  new File("fileserv/listeUser.ser");
+			ObjectOutputStream oos;
+			oos = new ObjectOutputStream(new FileOutputStream(fichier));
+			oos.writeObject(listeUsers);
+			oos.close();
+		} catch (IOException e) {
+			System.out.print("[-] ERREUR : ");
 			e.printStackTrace();
 		}
 	}
