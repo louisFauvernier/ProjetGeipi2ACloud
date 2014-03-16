@@ -6,7 +6,11 @@
 
 package projet2A.Serveur;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -114,6 +118,7 @@ public class ServeurIn extends Thread {
 	}
 	
 	public void rcvFileList(){
+		int index;
 		ObjectInputStream in;
 		try {
 			in = new ObjectInputStream(s.getInputStream());
@@ -124,11 +129,41 @@ public class ServeurIn extends Thread {
 				String key = (String)ii.next();
 				Fichier f = listeFile.get(key);
 				System.out.println("Lecture du cache client -> " + f.getName() + " version:" + f.getVersion());
+				if((index = getIndex("fileserv/filesave/" + f.getName() + ".ser")) == -1){
+					System.out.println("Fichier non existant");					
+				}
+				else{
+					Fichier temp = DeserializeFichier(new File("fileserv/filesave/" + f.getName() + ".ser"));
+					if(f.getVersion() > temp.getVersion()){
+						System.out.println("Version client plus récente");	
+					}
+					else if(f.getVersion() == temp.getVersion()){
+						System.out.println("Version client identique");
+					}
+					else{
+						System.out.println("Version serveur plus récente");
+					}
+				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("[-] Erreur : " + e.getMessage());
 			e.printStackTrace();
 		}
 		sout.sendMessage("synch_ok");
+	}
+	
+	public int getIndex(String str){
+		for(int i=0;i<Main.listeFiles.size();i++){
+			if(Main.listeFiles.get(i).equals(str)){
+				return i;
+			}
+		}
+		return -1;
+	}
+	public static Fichier DeserializeFichier(File file) throws IOException, ClassNotFoundException{
+		ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file));
+		Fichier out = (Fichier)ois.readObject();		
+        ois.close();
+        return out;
 	}
 }
