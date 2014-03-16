@@ -18,13 +18,11 @@ public class Main {
 	static ClientOut cout;
 	static ClientIn cin;
 	
-	
 	public static void main(String[] args) throws UnknownHostException, IOException {		
 		String[] listeFichiers = new File("files").list();
 		for(int i=0;i<listeFichiers.length;i++){
 			listeFile.put(listeFichiers[i], new Fichier("files/" + listeFichiers[i]));
 		}
-		listeFile.get("bash.sh").updateFile();
 		cout = new ClientOut("127.0.0.1");
 		cout.start();
 		cin = new ClientIn(8081);
