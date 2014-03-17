@@ -20,11 +20,9 @@ public class ServeurOut {
 			s = new Socket(adresse, port);
 			out = new PrintWriter(s.getOutputStream());
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:ServeurOut:20", e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21", e.getMessage());
 		}
 	}
 	

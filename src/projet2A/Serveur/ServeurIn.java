@@ -6,11 +6,9 @@
 
 package projet2A.Serveur;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -34,17 +32,17 @@ public class ServeurIn extends Thread {
 	
 	public void run(){
 		try {
-			System.out.println("[+] INFO : Lancement du serveur");
+			Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:35", "Lancement du serveur");
 			socket = new ServerSocket(this.Port);
 		} catch (IOException e) {
-			System.out.print("[!] FATAL  : " + e.getMessage());
+			Main.log.FATAL("projet2A.Serveur.Main.ServeurIn.java:run:36", e.getMessage());
 			System.exit(0);
 		}
 		while(true){
-			System.out.println("[+] INFO : En attente d'un client");
+			Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:42", "En attente d'un client");
 			try {
 				s = socket.accept();
-				System.out.println("[+] INFO : Client Connecté");
+				Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:45", "Client Connecté");
 				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
 				String message_distant = "";
 				in = new BufferedReader (new InputStreamReader (s.getInputStream()));
@@ -53,10 +51,9 @@ public class ServeurIn extends Thread {
 				}
 				sout.sendMessage("close_connexion");
 				s.close();
-				System.out.println("[+] INFO : Client déconnecté");
+				Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:54", "Client déconnecté");
 			} catch (IOException e) {
-				System.out.print("[-] ERREUR : ");
-				e.printStackTrace();
+				Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:run:56", e.getMessage());
 			}
 		}
 	}
@@ -71,17 +68,18 @@ public class ServeurIn extends Thread {
 		try{
 			String message = in.readLine();
 			if(message == null){ // Si message == null, alors perte de connexion avec le client
-				System.out.println("[-] ERREUR : Perte de connexion avec le client");
+				Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:connected:70", "Perte de connexion avec le client");
 				return "close_connexion";
 			}
 			else
 				return message; //Sinon on retourne le message envoyé par le client pour le traiter
 		}
 		catch (IOException e){
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:connected:70", "Perte de connexion avec le client " + e.getMessage());
 			return "close_connexion";
-		}
-		
+		}		
 	}
+	
 	/**
 	 * Fonction qui traite la demande envoyée par le client
 	 * @param msg
@@ -146,8 +144,7 @@ public class ServeurIn extends Thread {
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			System.out.println("[-] Erreur : " + e.getMessage());
-			e.printStackTrace();
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:rcvFileList:147", e.getMessage());
 		}
 		sout.sendMessage("synch_ok");
 	}
