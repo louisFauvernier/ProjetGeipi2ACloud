@@ -22,7 +22,7 @@ public class Main{
 	
 	public static void main(String[] args) {
 		loadFile();
-		listeUsers.add(new User("louis", "test"));
+		//listeUsers.add(new User("louis", "test"));
 		//saveFiles();
 		sin = new ServeurIn(8080);
 		sin.start();
@@ -39,7 +39,8 @@ public class Main{
 		} catch (IOException|ClassNotFoundException e) {
 			e.printStackTrace();	
 		}
-		System.out.println("[+] INFO : Chargement des fichiers présents sur le serveur");
+		System.out.println("[+] INFO : " + listeUsers.size() + "  utilisateurs chargés");
+		System.out.println("[+] INFO : Chargement des index de fichiers");
 		try {
 			File fichier =  new File("fileserv/listeFichier.ser");
 			ois = new ObjectInputStream(new FileInputStream(fichier));
@@ -48,6 +49,7 @@ public class Main{
 		} catch (IOException|ClassNotFoundException e) {
 			e.printStackTrace();	
 		}
+		System.out.println("[+] INFO : " + listeFiles.size() + "  index chargés");
 	}
 	
 	public static void saveFiles(){
