@@ -115,6 +115,7 @@ public class ServeurIn extends Thread {
 		// TODO
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void rcvFileList(){
 		int index;
 		ObjectInputStream in;
@@ -123,11 +124,12 @@ public class ServeurIn extends Thread {
 			Object objetRecu = in.readObject();
 			HashMap<String, Fichier> listeFile = (HashMap<String, Fichier>) objetRecu;
 			in.close();
-			for(Iterator ii = listeFile.keySet().iterator(); ii.hasNext();) {
+			for(Iterator<String> ii = listeFile.keySet().iterator(); ii.hasNext();) {
 				String key = (String)ii.next();
 				Fichier f = listeFile.get(key);
 				System.out.println("Lecture du cache client -> " + f.getName() + " version:" + f.getVersion());
-				if((index = getIndex("fileserv/filesave/" + f.getName() + ".ser")) == -1){
+				index = getIndex("fileserv/filesave/" + f.getName() + ".ser");
+				if(index == -1){
 					System.out.println("Fichier non existant");					
 				}
 				else{

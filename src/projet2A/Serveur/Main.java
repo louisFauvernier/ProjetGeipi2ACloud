@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
 import projet2A.commonFiles.User;
 
 public class Main{
@@ -30,6 +31,7 @@ public class Main{
 		sin.start();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void loadFile(){
 		log.INFO("projet2A.Serveur.Main.java:loadFile:34", "Chargement des Utilisateurs sur le serveur");
 		ObjectInputStream ois;

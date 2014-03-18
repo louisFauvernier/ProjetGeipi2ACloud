@@ -12,8 +12,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import javax.sound.midi.SysexMessage;
-
 import projet2A.commonFiles.Fichier;
 
 public class ClientIn extends Thread {
