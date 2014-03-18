@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -32,17 +33,17 @@ public class ServeurIn extends Thread {
 	
 	public void run(){
 		try {
-			Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:35", "Lancement du serveur");
+			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:35", "Lancement du serveur");
 			socket = new ServerSocket(this.Port);
 		} catch (IOException e) {
-			Main.log.FATAL("projet2A.Serveur.Main.ServeurIn.java:run:36", e.getMessage());
+			Main.log.FATAL("projet2A.Serveur.ServeurIn.java:run:36", e.getMessage());
 			System.exit(0);
 		}
 		while(true){
-			Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:42", "En attente d'un client");
+			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:42", "En attente d'un client");
 			try {
 				s = socket.accept();
-				Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:45", "Client Connecté");
+				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:45", "Client Connecté");
 				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
 				String message_distant = "";
 				in = new BufferedReader (new InputStreamReader (s.getInputStream()));
@@ -51,9 +52,10 @@ public class ServeurIn extends Thread {
 				}
 				sout.sendMessage("close_connexion");
 				s.close();
-				Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:run:54", "Client déconnecté");
+				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:54", "Client déconnecté");
 			} catch (IOException e) {
-				Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:run:56", e.getMessage());
+				Main.log.ERROR("projet2A.Serveur.ServeurIn.java:run:56", e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}
@@ -64,7 +66,7 @@ public class ServeurIn extends Thread {
 	 * @return message envoyé par le client ou si perte de connexion, demande de fermeture de connexion
 	 * @throws IOException
 	 */
-	public String connected() throws IOException{
+	public String connected(){
 		try{
 			String message = in.readLine();
 			if(message == null){ // Si message == null, alors perte de connexion avec le client
@@ -72,12 +74,11 @@ public class ServeurIn extends Thread {
 				return "close_connexion";
 			}
 			else
-				return message; //Sinon on retourne le message envoyé par le client pour le traiter
+				return message; //Sinon on retourne le message envoyé par le client pour le traiter	
 		}
-		catch (IOException e){
-			Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:connected:70", "Perte de connexion avec le client " + e.getMessage());
+		catch (Exception e){
 			return "close_connexion";
-		}		
+		}
 	}
 	
 	/**
@@ -90,7 +91,7 @@ public class ServeurIn extends Thread {
 			sout.sendMessage("send");
 			rcvFileList();
 		}
-		else{
+		else if (!msg.equals("nothing")){
 			System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
 			sout.sendMessage("ok");
 		}
@@ -130,23 +131,26 @@ public class ServeurIn extends Thread {
 				System.out.println("Lecture du cache client -> " + f.getName() + " version:" + f.getVersion());
 				index = getIndex("fileserv/filesave/" + f.getName() + ".ser");
 				if(index == -1){
-					System.out.println("Fichier non existant");					
+					System.out.println("Fichier non existant");
+					sout.sendMessage("send " + f.getName());
 				}
 				else{
 					Fichier temp = DeserializeFichier(new File("fileserv/filesave/" + f.getName() + ".ser"));
 					if(f.getVersion() > temp.getVersion()){
-						System.out.println("Version client plus récente");	
+						System.out.println("Version client plus récente");
+						sout.sendMessage("send " + f.getName());
 					}
 					else if(f.getVersion() == temp.getVersion()){
 						System.out.println("Version client identique");
 					}
 					else{
 						System.out.println("Version serveur plus récente");
+						sout.sendMessage("retrieve " + f.getName());
 					}
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:rcvFileList:147", e.getMessage());
+			Main.log.ERROR("projet2A.Serveur.ServeurIn.java:rcvFileList:147", e.getMessage());
 		}
 		sout.sendMessage("synch_ok");
 	}
@@ -159,6 +163,7 @@ public class ServeurIn extends Thread {
 		}
 		return -1;
 	}
+	
 	public static Fichier DeserializeFichier(File file) throws IOException, ClassNotFoundException{
 		ObjectInputStream ois =  new ObjectInputStream(new FileInputStream(file));
 		Fichier out = (Fichier)ois.readObject();		

@@ -41,6 +41,8 @@ public class ClientIn extends Thread {
 			while(!(message_distant = connected()).equals("close_connexion")){
 				traitementDemande(message_distant);
 			}
+			System.out.println("[+] INFO : Déconnexion du serveur");
+			Main.cout.close();
 			s.close();
 			System.exit(0);
 		} catch (IOException e) {
@@ -61,14 +63,20 @@ public class ClientIn extends Thread {
 	 * @return message envoyé par le client ou si perte de connexion, demande de fermeture de connexion
 	 * @throws IOException
 	 */
-	public String connected() throws IOException{
-		String message = in.readLine();
-		if(message == null){ // Si message == null, alors perte de connexion avec le client
-			System.out.println("[-] ERREUR : Perte de connexion avec le serveur");
+	public String connected(){
+		try{
+			String message = in.readLine();
+			if(message == null){ // Si message == null, alors perte de connexion avec le client
+				System.out.println("[-] ERREUR : Perte de connexion avec le serveur");
+				return "close_connexion";
+			}
+			else
+				return message; //Sinon on retourne le message envoyé par le client pour le traiter
+		}
+		catch (Exception e){
+			Main.cout.close();
 			return "close_connexion";
 		}
-		else
-			return message; //Sinon on retourne le message envoyé par le client pour le traiter
 	}
 	
 	public void traitementDemande(String message_distant){
@@ -79,10 +87,9 @@ public class ClientIn extends Thread {
 				System.out.println("[-] ERREUR : " + e.getMessage());
 			}
 		}
-		if(message_distant.equals("sync_ok")){
-			Main.cout.close();
+		if(message_distant.equals("synch_ok")){
 			System.out.println("Synchronisé");
-			System.exit(0);
+			Main.cout.close();
 		}
 		System.out.println("Message du serveur : " + message_distant);
 	}
