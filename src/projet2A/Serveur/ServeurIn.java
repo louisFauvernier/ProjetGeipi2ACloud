@@ -14,9 +14,9 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Stack;
 
 import projet2A.commonFiles.Fichier;
 
@@ -36,14 +36,15 @@ public class ServeurIn extends Thread {
 			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:35", "Lancement du serveur");
 			socket = new ServerSocket(this.Port);
 		} catch (IOException e) {
-			Main.log.FATAL("projet2A.Serveur.ServeurIn.java:run:36", e.getMessage());
+			StackTraceElement s = e.getStackTrace()[e.getStackTrace().length-1];
+			Main.log.FATAL(s.getFileName()+":"+s.getMethodName()+":"+s.getLineNumber() , e.getMessage());
 			System.exit(0);
 		}
 		while(true){
 			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:42", "En attente d'un client");
 			try {
 				s = socket.accept();
-				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:45", "Client Connecté");
+				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:46", "Client Connecté");
 				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
 				String message_distant = "";
 				in = new BufferedReader (new InputStreamReader (s.getInputStream()));
@@ -52,10 +53,12 @@ public class ServeurIn extends Thread {
 				}
 				sout.sendMessage("close_connexion");
 				s.close();
-				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:54", "Client déconnecté");
+				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:55", "Client déconnecté");
 			} catch (IOException e) {
-				Main.log.ERROR("projet2A.Serveur.ServeurIn.java:run:56", e.getMessage());
-				e.printStackTrace();
+				StackTraceElement s = e.getStackTrace()[e.getStackTrace().length-1];
+				Main.log.FATAL(s.getFileName() + ":" + s.getMethodName() + ":"
+						+ s.getLineNumber(), e.getMessage());
+
 			}
 		}
 	}
@@ -90,6 +93,14 @@ public class ServeurIn extends Thread {
 			System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
 			sout.sendMessage("send");
 			rcvFileList();
+		}
+		if(msg.startsWith("create user")){
+			System.out.println("Client (" + s.getInetAddress() + ") demande : créer utilisateur");
+			String[] tmp = msg.split(" ");
+			if(Main.addNewUser(tmp[2], tmp[3])==0)
+				sout.sendMessage("user created");
+			else
+				sout.sendMessage("user already exist");
 		}
 		else if (!msg.equals("nothing")){
 			System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
@@ -150,7 +161,7 @@ public class ServeurIn extends Thread {
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			Main.log.ERROR("projet2A.Serveur.ServeurIn.java:rcvFileList:147", e.getMessage());
+			Main.log.ERROR("projet2A.Serveur.ServeurIn.java:rcvFileList:152", e.getMessage());
 		}
 		sout.sendMessage("synch_ok");
 	}

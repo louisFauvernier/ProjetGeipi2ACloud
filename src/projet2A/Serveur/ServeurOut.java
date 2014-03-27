@@ -11,41 +11,47 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class ServeurOut {
+public class ServeurOut{
 	private Socket s;
 	private PrintWriter out;
-	
-	public ServeurOut(String adresse, int port){
-		try {
+
+	public ServeurOut(String adresse, int port) {
+		try{
 			s = new Socket(adresse, port);
 			out = new PrintWriter(s.getOutputStream());
-		} catch (UnknownHostException e) {
-			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:ServeurOut:20", e.getMessage());
-		} catch (IOException e) {
-			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21", e.getMessage());
+		} catch (UnknownHostException e){
+			Main.log.ERROR(
+					"projet2A.Serveur.Main.ServeurOut.java:ServeurOut:20",
+					e.getMessage());
+		} catch (IOException e){
+			Main.log.ERROR(
+					"projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21",
+					e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Fonction de chargement d'un fichier sérializé depuis le disque
 	 * 
-	 * @param name : Nom du fichier à charger
+	 * @param name
+	 *            : Nom du fichier à charger
 	 */
 	public void loadSerializedFile(String name){
 		// TODO
 	}
-	
+
 	/**
 	 * Fonction d'envoie du fichier au client
 	 */
 	public void sendFile(){
 		// TODO
 	}
-	
+
 	/**
 	 * Fonction d"envoie de message au client
 	 * 
-	 * @param message : Message à envoyer
+	 * @param message
+	 *            : Message à envoyer
 	 */
 	public void sendMessage(String message){
 		out.println(message);

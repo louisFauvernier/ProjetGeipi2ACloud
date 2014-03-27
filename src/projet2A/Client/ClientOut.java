@@ -64,8 +64,9 @@ public class ClientOut extends Thread{
 		}
 		try{
 			out = new PrintWriter(socket.getOutputStream());
-			out.println("sync");
-			out.flush();
+			createUser("louis", "test");
+			//out.println("sync");
+			//out.flush();
 		} catch (IOException e) {
 			System.out.println("[!] FATAL  : " + e.getMessage());
 			e.printStackTrace();
@@ -104,5 +105,10 @@ public class ClientOut extends Thread{
 		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 		out.writeObject(Main.listeFile);
 	    out.flush();
+	}
+	
+	public void createUser(String name, String pass){
+		out.println("create user " + name + " " + pass);
+		out.flush();		
 	}
 }

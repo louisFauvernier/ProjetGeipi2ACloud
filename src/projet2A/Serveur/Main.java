@@ -71,7 +71,7 @@ public class Main{
 	}
 	public static void saveUsers(){
 		try {
-			File fichier =  new File("fileserv/listeUser.ser");
+			File fichier = new File("fileserv/listeUser.ser");
 			ObjectOutputStream oos;
 			oos = new ObjectOutputStream(new FileOutputStream(fichier));
 			oos.writeObject(listeUsers);
@@ -80,5 +80,24 @@ public class Main{
 		} catch (IOException e) {
 			log.ERROR("projet2A.Serveur.Main.java:saveUsers:73", e.getMessage());
 		}
+	}
+	
+	public static int addNewUser(String name, String pass){
+		if(estInscrit(name)){
+			return 1;
+		}
+		listeUsers.add(new User(name, pass));
+		File dossier = new File("fileserv/UsersFiles/" + name);
+		dossier.mkdir();
+		saveUsers();
+		return 0;
+	}
+	public static boolean estInscrit(String name){
+		for(int i=0;i<listeUsers.size();i++){
+			if(listeUsers.get(i).getId().equals(name)){
+				return true;
+			}
+		}
+		return false;
 	}
 }
