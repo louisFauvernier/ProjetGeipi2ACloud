@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import projet2A.commonFiles.Fichier;
 import projet2A.commonFiles.User;
 
 public class Main{
@@ -22,11 +23,10 @@ public class Main{
 	static ArrayList<String> listeFiles = new ArrayList<String>();
 	static ArrayList<User> listeUsers = new ArrayList<User>();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		log = new Logger();
 		loadFile();
-		//listeUsers.add(new User("louis", "test"));
-		//saveFiles();
+		//RAZServer();
 		sin = new ServeurIn(8080);
 		sin.start();
 	}
@@ -64,12 +64,13 @@ public class Main{
 			oos = new ObjectOutputStream(new FileOutputStream(fichier));
 			oos.writeObject(listeFiles);
 			oos.close();
-			log.INFO("projet2A.Serveur.Main.java:saveFiles:65", "Succès");
+			log.INFO("projet2A.Serveur.Main.java:saveFiles:65", listeFiles.size() + " index sauvegardés");
 		} catch (IOException e) {
 			log.ERROR("projet2A.Serveur.Main.java:saveFiles:63", e.getMessage());
 		}
 	}
 	public static void saveUsers(){
+		log.INFO("projet2A.Serveur.Main.java:saveFiles:72", "Sauvegarde des utilisateurs du serveur");
 		try {
 			File fichier = new File("fileserv/listeUser.ser");
 			ObjectOutputStream oos;
@@ -83,7 +84,7 @@ public class Main{
 	}
 	
 	public static int addNewUser(String name, String pass){
-		if(estInscrit(name)){
+		if(estInscrit(name)!= -1){
 			return 1;
 		}
 		listeUsers.add(new User(name, pass));
@@ -92,12 +93,33 @@ public class Main{
 		saveUsers();
 		return 0;
 	}
-	public static boolean estInscrit(String name){
+	public static int estInscrit(String name){
 		for(int i=0;i<listeUsers.size();i++){
 			if(listeUsers.get(i).getId().equals(name)){
-				return true;
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	public static void RAZServer(){
+		System.out.println("SCRIPT DE REMISE A ZERO DU SERVEUR! TOUTES LES DONNEES SONT EFFACEES");
+		listeFiles = new ArrayList<String>();
+		listeUsers = new ArrayList<User>();
+		String[] listeFichiers = new File("fileserv/UsersFiles").list();
+		for(int i=0;i<listeFichiers.length;i++){
+			delete(new File("fileserv/UsersFiles/" + listeFichiers[i]));
+		}
+		addNewUser("louis", "test");
+		
+	}
+	public static void delete(File f){
+		System.out.println(f.getAbsolutePath());
+		if(f.isDirectory()){
+			String[] listeFichiers = new File(f.getAbsolutePath()).list();
+			for(int i=0;i<listeFichiers.length;i++){
+				delete(new File(f.getAbsolutePath()+"/" + listeFichiers[i]));
+			}
+		}
+		f.delete();
 	}
 }

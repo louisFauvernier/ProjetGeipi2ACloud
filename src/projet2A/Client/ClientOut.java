@@ -9,16 +9,16 @@ package projet2A.Client;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
+import projet2A.commonFiles.Constantes;
 import projet2A.commonFiles.Fichier;
 
 public class ClientOut extends Thread{
 	private Socket socket;
 	private int port = 8080;
 	private String adresse;
-	private PrintWriter out;
+	private ObjectOutputStream out;
 	
 	public ClientOut(String adresse) {
 		this.adresse = adresse;
@@ -63,10 +63,10 @@ public class ClientOut extends Thread{
 			}
 		}
 		try{
-			out = new PrintWriter(socket.getOutputStream());
-			createUser("louis", "test");
-			//out.println("sync");
-			//out.flush();
+			out = new ObjectOutputStream(socket.getOutputStream());
+			//createUser("louis", "test");
+			out.writeObject(Constantes.CLIENT_LOGIN);
+			out.flush();
 		} catch (IOException e) {
 			System.out.println("[!] FATAL  : " + e.getMessage());
 			e.printStackTrace();
@@ -75,8 +75,13 @@ public class ClientOut extends Thread{
 	}
 	
 	public void close(){
-		out.println("close_connexion");
-		out.flush();
+		try{
+			out.writeObject(Constantes.CLIENT_CLOSECONNEXION);
+			out.flush();
+		} catch (IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -94,7 +99,13 @@ public class ClientOut extends Thread{
 	 * @param f
 	 */
 	public void sendFile(Fichier f){
-		// TODO
+		try{
+			System.out.println("Send " + f.getName());
+			out.writeObject(f);
+		} catch (IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public String[] listeFichiers(String répertoire){
@@ -102,13 +113,35 @@ public class ClientOut extends Thread{
 	}
 	
 	public void send() throws IOException{
-		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 		out.writeObject(Main.listeFile);
 	    out.flush();
 	}
 	
+	public void sendMessage(String message){
+		try{
+			out.writeObject(new String(message));
+			out.flush();
+		} catch (IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void sendState(Integer message){
+		try{
+			out.writeObject(message);
+			out.flush();
+		} catch (IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public void createUser(String name, String pass){
-		out.println("create user " + name + " " + pass);
-		out.flush();		
+		try{
+			out.writeBytes("create user " + name + " " + pass);
+			out.flush();
+		} catch (IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 }

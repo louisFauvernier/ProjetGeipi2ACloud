@@ -6,18 +6,18 @@
 
 package projet2A.Serveur;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Stack;
 
+import projet2A.commonFiles.Constantes;
 import projet2A.commonFiles.Fichier;
 
 public class ServeurIn extends Thread {
@@ -25,7 +25,8 @@ public class ServeurIn extends Thread {
 	private ServerSocket socket;
 	private Socket s;
 	private ServeurOut sout;
-	private BufferedReader in;
+	private ObjectInputStream in;
+	private String user = "";
 	
 	public ServeurIn(int port){
 		this.Port = port;
@@ -46,19 +47,21 @@ public class ServeurIn extends Thread {
 				s = socket.accept();
 				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:46", "Client Connecté");
 				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
-				String message_distant = "";
-				in = new BufferedReader (new InputStreamReader (s.getInputStream()));
-				while(!(message_distant = connected()).equals("close_connexion")){
+				Object message_distant = "";
+				in = new ObjectInputStream(s.getInputStream());
+				while(!(message_distant = connected()).equals(Constantes.CLIENT_CLOSECONNEXION)){
 					traitementDemande(message_distant);
 				}
-				sout.sendMessage("close_connexion");
+				sout.sendState(Constantes.CLIENT_CLOSECONNEXION);
+				this.user = "";
+				in.close();
 				s.close();
 				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:55", "Client déconnecté");
 			} catch (IOException e) {
 				StackTraceElement s = e.getStackTrace()[e.getStackTrace().length-1];
 				Main.log.FATAL(s.getFileName() + ":" + s.getMethodName() + ":"
 						+ s.getLineNumber(), e.getMessage());
-
+				this.user = "";
 			}
 		}
 	}
@@ -69,18 +72,18 @@ public class ServeurIn extends Thread {
 	 * @return message envoyé par le client ou si perte de connexion, demande de fermeture de connexion
 	 * @throws IOException
 	 */
-	public String connected(){
+	public Object connected(){
 		try{
-			String message = in.readLine();
+			Object message = in.readObject();
 			if(message == null){ // Si message == null, alors perte de connexion avec le client
 				Main.log.ERROR("projet2A.Serveur.Main.ServeurIn.java:connected:70", "Perte de connexion avec le client");
-				return "close_connexion";
+				return Constantes.CLIENT_CLOSECONNEXION;
 			}
 			else
 				return message; //Sinon on retourne le message envoyé par le client pour le traiter	
 		}
 		catch (Exception e){
-			return "close_connexion";
+			return Constantes.CLIENT_CLOSECONNEXION;
 		}
 	}
 	
@@ -88,7 +91,7 @@ public class ServeurIn extends Thread {
 	 * Fonction qui traite la demande envoyée par le client
 	 * @param msg
 	 */
-	public void traitementDemande(String msg){
+	/*public void traitementDemande(String msg){
 		if(msg.equals("sync")){
 			System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
 			sout.sendMessage("send");
@@ -106,64 +109,121 @@ public class ServeurIn extends Thread {
 			System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
 			sout.sendMessage("ok");
 		}
+	}*/
+	public void traitementDemande(Object msg){
+		if(msg.getClass().equals(Constantes.CLIENT_LOGIN.getClass())){
+			System.out.println("Message du client : " + msg);
+			if(msg.equals(Constantes.CLIENT_LOGIN) && this.user.equals("")){
+				sout.sendState(Constantes.CLIENT_ID);
+			}
+			else if(this.user == ""){
+				sout.sendState(Constantes.LOGIN_REQUIRED);
+			}
+			else if(msg.equals(Constantes.CLIENT_SYNC)){
+				rcvFileList();
+			}
+			else if(msg.equals(Constantes.CLIENT_LOGOUT)){
+				this.user = "";
+				sout.sendState(Constantes.USER_SUCCESS_LOGOUT);
+			}
+			else{
+				System.out.println("Client envoie " + msg);
+			}
+		}
+		else{
+			String message = (String) msg;
+			if(message.startsWith("id")){
+				String tmp[] = message.split(" ");
+				int i = Main.estInscrit(tmp[1]);
+				if(i == -1 || !Main.listeUsers.get(i).getPassword().equals(tmp[2])){
+					sout.sendState(Constantes.USER_FAILED_LOGIN);					
+				}
+				else{
+					sout.sendState(Constantes.USER_SUCCESS_LOGIN);
+					this.user = tmp[1];
+				}
+			}
+			else if(message.startsWith("create user")){
+				System.out.println("Client (" + s.getInetAddress() + ") demande : créer utilisateur");
+				String[] tmp = message.split(" ");
+				if(Main.addNewUser(tmp[2], tmp[3])==0)
+					sout.sendState(Constantes.USER_SUCCESS_CREATE);
+				else
+					sout.sendState(Constantes.USER_FAILED_CREATE);
+			}
+			else{
+				System.out.println("Client envoie " + msg);
+			}
+		}
 	}
 	
 	/**
 	 * Fonction de reception d'un fichier depuis un client
 	 * 
 	 * @return : Objet Fichier 
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public Fichier rcvFile(){
-		// TODO
-		return null;
+	public Fichier rcvFile() throws IOException, ClassNotFoundException{
+		Object objetRecu = in.readObject();
+		Fichier f = (Fichier) objetRecu;
+		return f;
 	}
 	
 	/**
 	 * Fonction de sauvegarde d'un fichier serialize sur le disque
 	 * 
 	 * @param f : Fichier Serialize à enregistrer sur le disque
+	 * @throws IOException 
 	 */
-	public void saveSerializedFile(Fichier f){
-		// TODO
+	public void saveSerializedFile(Fichier f) throws IOException{
+		Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:sveSerializedFile:169", "Sauvegarde du fichier");
+		ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(new File("fileserv/UsersFiles/" + this.user +"/"+f.getName()+".ser")));
+		oos.writeObject(f);
+		oos.flush();
+		oos.close();
+		Main.listeFiles.add("fileserv/UsersFiles/"+ this.user + "/" + f.getName() + ".ser");
+		Main.saveFiles();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void rcvFileList(){
 		int index;
-		ObjectInputStream in;
 		try {
-			in = new ObjectInputStream(s.getInputStream());
+			sout.sendState(Constantes.FILE_SEND_LIST);
 			Object objetRecu = in.readObject();
 			HashMap<String, Fichier> listeFile = (HashMap<String, Fichier>) objetRecu;
-			in.close();
 			for(Iterator<String> ii = listeFile.keySet().iterator(); ii.hasNext();) {
 				String key = (String)ii.next();
 				Fichier f = listeFile.get(key);
 				System.out.println("Lecture du cache client -> " + f.getName() + " version:" + f.getVersion());
-				index = getIndex("fileserv/filesave/" + f.getName() + ".ser");
+				index = getIndex("fileserv/UsersFiles/"+ this.user + "/" + f.getName() + ".ser");
 				if(index == -1){
 					System.out.println("Fichier non existant");
 					sout.sendMessage("send " + f.getName());
+					saveSerializedFile(rcvFile());
 				}
 				else{
-					Fichier temp = DeserializeFichier(new File("fileserv/filesave/" + f.getName() + ".ser"));
+					Fichier temp = DeserializeFichier(new File("fileserv/UsersFiles/"+ this.user + "/" + f.getName() + ".ser"));
 					if(f.getVersion() > temp.getVersion()){
 						System.out.println("Version client plus récente");
 						sout.sendMessage("send " + f.getName());
+						saveSerializedFile(rcvFile());
 					}
 					else if(f.getVersion() == temp.getVersion()){
 						System.out.println("Version client identique");
 					}
 					else{
 						System.out.println("Version serveur plus récente");
-						sout.sendMessage("retrieve " + f.getName());
+						sout.sendMessage("receive " + f.getName());
 					}
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			Main.log.ERROR("projet2A.Serveur.ServeurIn.java:rcvFileList:152", e.getMessage());
+			Main.log.ERROR("projet2A.Serveur.ServeurIn.java:rcvFileList:224", e.getMessage());
+			e.printStackTrace();
 		}
-		sout.sendMessage("synch_ok");
+		sout.sendState(Constantes.CLIENT_SYNC_OK);
 	}
 	
 	public int getIndex(String str){

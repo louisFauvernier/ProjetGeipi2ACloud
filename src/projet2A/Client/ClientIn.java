@@ -6,30 +6,34 @@
 
 package projet2A.Client;
 
-import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import projet2A.commonFiles.Constantes;
 import projet2A.commonFiles.Fichier;
 
 public class ClientIn extends Thread{
 	private ServerSocket socket;
 	private Socket s;
-	private BufferedReader in;
-	private String message_distant = "";
+	private ObjectInputStream in;
+	private Object message_distant;
+	private ClientOut cout;
 
-	public ClientIn(int i) {
+	public ClientIn(int i, ClientOut cout) {
 		try{
 			socket = new ServerSocket(i);
 			s = socket.accept();
+			this.cout = cout;
 		} catch (IOException e){
 			System.out.println("[!] FATAL  : " + e.getMessage());
 			System.exit(0);
 		}
 		try{
-			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			in = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e){
 			System.out.println("[-] Erreur : ");
 			e.printStackTrace();
@@ -37,12 +41,13 @@ public class ClientIn extends Thread{
 	}
 
 	public void run(){
+		System.out.println("Execution du client ...");
 		try{
-			while (!(message_distant = connected()).equals("close_connexion")){
+			while (!(message_distant = connected()).equals(Constantes.CLIENT_CLOSECONNEXION)){
 				traitementDemande(message_distant);
 			}
 			System.out.println("[+] INFO : Déconnexion du serveur");
-			Main.cout.close();
+			cout.close();
 			s.close();
 			System.exit(0);
 		} catch (IOException e){
@@ -64,27 +69,24 @@ public class ClientIn extends Thread{
 	 *         fermeture de connexion
 	 * @throws IOException
 	 */
-	public String connected(){
+	public Object connected(){
 		try{
-			String message = in.readLine();
-			if(message == null){ // Si message == null, alors perte de connexion
-									// avec le client
-				System.out
-						.println("[-] ERREUR : Perte de connexion avec le serveur");
+			Object message = in.readObject();
+			if(message == null){
+				System.out.println("[-] ERREUR : Perte de connexion avec le serveur");
 				return "close_connexion";
 			} else
-				return message; // Sinon on retourne le message envoyé par le
-								// client pour le traiter
+				return message;
 		} catch (Exception e){
-			Main.cout.close();
+			cout.close();
 			return "close_connexion";
 		}
 	}
 
-	public void traitementDemande(String message_distant){
+	/*public void traitementDemande(String message_distant){
 		if(message_distant.equals("send")){
 			try{
-				Main.cout.send();
+				cout.send();
 			} catch (IOException e){
 				System.out.println("[-] ERREUR : " + e.getMessage());
 			}
@@ -97,9 +99,60 @@ public class ClientIn extends Thread{
 		}
 		else if(message_distant.equals("synch_ok")){
 			System.out.println("Synchronisé");
-			Main.cout.close();
+			cout.close();
 		}
 		System.out.println("Message du serveur : " + message_distant);
+	}*/
+	
+	public void traitementDemande(Object message_distant){
+		System.out.println("Message du serveur : " + message_distant);
+		if(message_distant.getClass().equals(Constantes.CLIENT_LOGIN.getClass())){
+			if(message_distant.equals(Constantes.CLIENT_ID)){
+				//TODO
+				cout.sendMessage("id louis test");
+			}
+			else if(message_distant.equals(Constantes.CLIENT_SYNC_OK)){
+				cout.sendState(Constantes.CLIENT_LOGOUT);
+				cout.sendState(Constantes.CLIENT_CLOSECONNEXION);
+			}
+			else if (message_distant.equals(Constantes.USER_SUCCESS_LOGIN)){
+				cout.sendState(Constantes.CLIENT_SYNC);
+			}
+			else if (message_distant.equals(Constantes.FILE_SEND_LIST)){
+				try{
+					cout.send();
+				} catch (IOException e){
+					System.out.println("[-] ERREUR : " + e.getMessage());
+				}
+			}
+			else{
+				System.out.println("Serveur envoie " + message_distant);
+			}
+		}
+		else{
+			String message = (String) message_distant;
+			if(message.startsWith("send")){
+				String[] tmp = message.split(" ");
+				cout.sendFile(Main.listeFile.get(tmp[1]));
+			}
+			else if(message.startsWith("receive")){
+				//String[] tmp = message.split(" ");
+				try{
+					Fichier f = rcvFichier();
+					saveFile(f);
+				} catch (ClassNotFoundException e){
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e){
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else{
+				System.out.println("Serveur envoie " + message);
+			}
+		}
+		
 	}
 
 	/**
@@ -107,17 +160,32 @@ public class ClientIn extends Thread{
 	 * 
 	 * @return
 	 */
-	public Fichier rcvFichier(){
-		// TODO
-		return null;
+	public Fichier rcvFichier() throws IOException, ClassNotFoundException{
+		ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+		Object objetRecu = in.readObject();
+		Fichier f = (Fichier) objetRecu;
+		return f;
 	}
 
 	/**
 	 * Fonction d'enregistrement du fichier sur l'ordinateur (local)
 	 * 
 	 * @return
+	 * @throws IOException 
 	 */
-	public void saveFile(){
-		// TODO
+	public void saveFile(Fichier f) throws IOException{
+		FileOutputStream fos = new FileOutputStream("files/"+f.getName());
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		int b = 0, c = f.getTaille() / 4096;
+		for(int i=0;i<f.getTaille();i++){
+			b = f.getContenu()[i];
+			if(i%c==0)
+				System.out.println("Copie en cours : " + i + "/" + f.getTaille());
+            bos.write(b);
+        }
+        bos.flush();
+        bos.close();
+        fos.flush();  
+        fos.close();
 	}
 }
