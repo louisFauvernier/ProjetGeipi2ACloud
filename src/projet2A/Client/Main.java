@@ -13,11 +13,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import projet2A.commonFiles.Fichier;
-import projet2A.commonFiles.User;
 
 public class Main {
 	public static HashMap<String, Fichier> listeFile = new HashMap<String, Fichier>();

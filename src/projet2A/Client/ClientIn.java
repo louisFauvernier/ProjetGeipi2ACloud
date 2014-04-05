@@ -114,7 +114,6 @@ public class ClientIn extends Thread{
 				cout.sendFile(Main.listeFile.get(tmp[1]));
 			}
 			else if(message.startsWith("receive")){
-				String[] tmp = message.split(" ");
 				try{
 					Fichier f = rcvFichier();
 					saveFile(f);
@@ -157,7 +156,8 @@ public class ClientIn extends Thread{
 		int b = 0, c = 4096;
 		for(int i=0;i<f.getContenu().length;i++){
 			b = f.getContenu()[i];
-			System.out.println("Copie en cours : " + i + "/");
+			if(b%c==0)
+				System.out.println("Copie en cours : " + i + "/");
             bos.write(b);
         }
         bos.flush();
