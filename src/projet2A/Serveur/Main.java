@@ -26,7 +26,7 @@ public class Main{
 	public static void main(String[] args){
 		log = new Logger();
 		loadFile();
-		RAZServer();
+		//RAZServer();
 		sin = new ServeurIn(8080);
 		sin.start();
 	}
@@ -105,6 +105,8 @@ public class Main{
 		System.out.println("SCRIPT DE REMISE A ZERO DU SERVEUR! TOUTES LES DONNEES SONT EFFACEES");
 		listeFiles = new ArrayList<String>();
 		listeUsers = new ArrayList<User>();
+		saveUsers();
+		saveFiles();
 		String[] listeFichiers = new File("fileserv/UsersFiles").list();
 		for(int i=0;i<listeFichiers.length;i++){
 			delete(new File("fileserv/UsersFiles/" + listeFichiers[i]));

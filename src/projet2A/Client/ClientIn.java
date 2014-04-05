@@ -114,7 +114,7 @@ public class ClientIn extends Thread{
 				cout.sendFile(Main.listeFile.get(tmp[1]));
 			}
 			else if(message.startsWith("receive")){
-				//String[] tmp = message.split(" ");
+				String[] tmp = message.split(" ");
 				try{
 					Fichier f = rcvFichier();
 					saveFile(f);
@@ -139,7 +139,6 @@ public class ClientIn extends Thread{
 	 * @return
 	 */
 	public Fichier rcvFichier() throws IOException, ClassNotFoundException{
-		ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 		Object objetRecu = in.readObject();
 		Fichier f = (Fichier) objetRecu;
 		return f;
@@ -152,18 +151,22 @@ public class ClientIn extends Thread{
 	 * @throws IOException 
 	 */
 	public void saveFile(Fichier f) throws IOException{
+		System.out.println("Ecriture du fichier " + f.getName() + "(" + f.getTaille() + "/"  +f.getContenu().length + ")");
 		FileOutputStream fos = new FileOutputStream("files/"+f.getName());
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
-		int b = 0, c = f.getTaille() / 4096;
-		for(int i=0;i<f.getTaille();i++){
+		int b = 0, c = 4096;
+		for(int i=0;i<f.getContenu().length;i++){
 			b = f.getContenu()[i];
-			if(i%c==0)
-				System.out.println("Copie en cours : " + i + "/" + f.getTaille());
+			System.out.println("Copie en cours : " + i + "/");
             bos.write(b);
         }
         bos.flush();
         bos.close();
         fos.flush();  
         fos.close();
+        if(Main.listeFile.containsKey(f.getName()))
+        	Main.listeFile.remove(f.getName());
+        Main.listeFile.put(f.getName(),	f);
+    	Main.saveFiles();
 	}
 }

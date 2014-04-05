@@ -157,11 +157,16 @@ public class ServeurIn extends Thread {
 	 * @throws IOException 
 	 */
 	public void saveSerializedFile(Fichier f) throws IOException{
-		Main.log.INFO("projet2A.Serveur.Main.ServeurIn.java:sveSerializedFile:169", "Sauvegarde du fichier");
+		Main.log.INFO("projet2A.Serveur.ServeurIn.java:saveSerializedFile:162", "Sauvegarde du fichier");
 		ObjectOutputStream oos =  new ObjectOutputStream(new FileOutputStream(new File("fileserv/UsersFiles/" + this.user +"/"+f.getName()+".ser")));
+		System.out.println(f.getTaille() + " " + f.getContenu().length);
 		oos.writeObject(f);
 		oos.flush();
 		oos.close();
+		int m;
+		if((m = getIndex("fileserv/UsersFiles/"+ this.user + "/" + f.getName() + ".ser"))!= -1){
+			Main.listeFiles.remove(m);
+		}
 		Main.listeFiles.add("fileserv/UsersFiles/"+ this.user + "/" + f.getName() + ".ser");
 		Main.saveFiles();
 	}
@@ -194,7 +199,8 @@ public class ServeurIn extends Thread {
 						System.out.println("Version client identique");
 					else{
 						System.out.println("Version serveur plus récente");
-						sout.sendMessage("receive " + f.getName());
+						sout.sendMessage("receive " + temp.getName());
+						sout.sendFile(temp);
 					}
 				}
 			}

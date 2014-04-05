@@ -6,13 +6,15 @@
 
 package projet2A.Serveur;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import projet2A.commonFiles.Constantes;
+import projet2A.commonFiles.Fichier;
 
 public class ServeurOut{
 	private Socket s;
@@ -34,27 +36,23 @@ public class ServeurOut{
 	}
 
 	/**
-	 * Fonction de chargement d'un fichier sérializé depuis le disque
-	 * 
-	 * @param name
-	 *            : Nom du fichier à charger
-	 */
-	public void loadSerializedFile(String name){
-		// TODO
-	}
-
-	/**
 	 * Fonction d'envoie du fichier au client
 	 */
-	public void sendFile(){
-		// TODO
+	public void sendFile(Fichier f){
+		try{
+			System.out.println("Send " + f.getName());
+			out.writeObject(f);
+			out.flush();
+		} catch (IOException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Fonction d"envoie de message au client
 	 * 
-	 * @param message
-	 *            : Message à envoyer
+	 * @param message : Message à envoyer
 	 */
 	public void sendMessage(String message){
 		try{

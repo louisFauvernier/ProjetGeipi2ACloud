@@ -100,8 +100,9 @@ public class ClientOut extends Thread{
 	 */
 	public void sendFile(Fichier f){
 		try{
-			System.out.println("Send " + f.getName());
+			System.out.println("Send " + f.getName() + " (" + f.getTaille() + "/" + f.getContenu().length + ")");
 			out.writeObject(f);
+			out.flush();
 		} catch (IOException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
