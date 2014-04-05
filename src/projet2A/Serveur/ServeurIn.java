@@ -190,9 +190,8 @@ public class ServeurIn extends Thread {
 						sout.sendMessage("send " + f.getName());
 						saveSerializedFile(rcvFile());
 					}
-					else if(f.getVersion() == temp.getVersion()){
+					else if(f.getVersion() == temp.getVersion())
 						System.out.println("Version client identique");
-					}
 					else{
 						System.out.println("Version serveur plus récente");
 						sout.sendMessage("receive " + f.getName());
