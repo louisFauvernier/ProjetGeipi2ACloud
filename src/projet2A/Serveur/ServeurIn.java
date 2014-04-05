@@ -91,28 +91,8 @@ public class ServeurIn extends Thread {
 	 * Fonction qui traite la demande envoyée par le client
 	 * @param msg
 	 */
-	/*public void traitementDemande(String msg){
-		if(msg.equals("sync")){
-			System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
-			sout.sendMessage("send");
-			rcvFileList();
-		}
-		if(msg.startsWith("create user")){
-			System.out.println("Client (" + s.getInetAddress() + ") demande : créer utilisateur");
-			String[] tmp = msg.split(" ");
-			if(Main.addNewUser(tmp[2], tmp[3])==0)
-				sout.sendMessage("user created");
-			else
-				sout.sendMessage("user already exist");
-		}
-		else if (!msg.equals("nothing")){
-			System.out.println("Client (" + s.getInetAddress() + ") demande : " + msg);
-			sout.sendMessage("ok");
-		}
-	}*/
 	public void traitementDemande(Object msg){
 		if(msg.getClass().equals(Constantes.CLIENT_LOGIN.getClass())){
-			System.out.println("Message du client : " + msg);
 			if(msg.equals(Constantes.CLIENT_LOGIN) && this.user.equals("")){
 				sout.sendState(Constantes.CLIENT_ID);
 			}

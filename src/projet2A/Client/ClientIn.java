@@ -83,29 +83,7 @@ public class ClientIn extends Thread{
 		}
 	}
 
-	/*public void traitementDemande(String message_distant){
-		if(message_distant.equals("send")){
-			try{
-				cout.send();
-			} catch (IOException e){
-				System.out.println("[-] ERREUR : " + e.getMessage());
-			}
-		}
-		else if(message_distant.equals("user created")){
-			System.out.println("Utilisateur créé avec succès");
-		}
-		else if(message_distant.equals("user already exist")){
-			System.out.println("Identifiant déjà utilisé");
-		}
-		else if(message_distant.equals("synch_ok")){
-			System.out.println("Synchronisé");
-			cout.close();
-		}
-		System.out.println("Message du serveur : " + message_distant);
-	}*/
-	
 	public void traitementDemande(Object message_distant){
-		System.out.println("Message du serveur : " + message_distant);
 		if(message_distant.getClass().equals(Constantes.CLIENT_LOGIN.getClass())){
 			if(message_distant.equals(Constantes.CLIENT_ID)){
 				//TODO

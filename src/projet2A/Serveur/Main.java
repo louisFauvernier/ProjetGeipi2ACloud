@@ -26,7 +26,7 @@ public class Main{
 	public static void main(String[] args){
 		log = new Logger();
 		loadFile();
-		//RAZServer();
+		RAZServer();
 		sin = new ServeurIn(8080);
 		sin.start();
 	}
@@ -109,6 +109,7 @@ public class Main{
 		for(int i=0;i<listeFichiers.length;i++){
 			delete(new File("fileserv/UsersFiles/" + listeFichiers[i]));
 		}
+		log.INFO("projet2A.Serveur.Main.java:RAZServer:113", "Ajout d'un utilisateur par defaut");
 		addNewUser("louis", "test");
 		
 	}
