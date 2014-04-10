@@ -86,7 +86,6 @@ public class ClientIn extends Thread{
 	public void traitementDemande(Object message_distant){
 		if(message_distant.getClass().equals(Constantes.CLIENT_LOGIN.getClass())){
 			if(message_distant.equals(Constantes.CLIENT_ID)){
-				//TODO
 				cout.sendMessage("id louis test");
 			}
 			else if(message_distant.equals(Constantes.CLIENT_SYNC_OK)){
@@ -118,11 +117,9 @@ public class ClientIn extends Thread{
 					Fichier f = rcvFichier();
 					saveFile(f);
 				} catch (ClassNotFoundException e){
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e.getMessage());
 				} catch (IOException e){
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println(e.getMessage());
 				}
 			}
 			else{

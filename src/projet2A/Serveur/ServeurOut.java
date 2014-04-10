@@ -22,13 +22,9 @@ public class ServeurOut{
 			s = new Socket(adresse, port);
 			out = new ObjectOutputStream(s.getOutputStream());
 		} catch (UnknownHostException e){
-			Main.log.ERROR(
-					"projet2A.Serveur.Main.ServeurOut.java:ServeurOut:20",
-					e.getMessage());
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21", e.getMessage());
 		} catch (IOException e){
-			Main.log.ERROR(
-					"projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21",
-					e.getMessage());
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21", e.getMessage());
 		}
 	}
 
@@ -41,8 +37,7 @@ public class ServeurOut{
 			out.writeObject(f);
 			out.flush();
 		} catch (IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:sendFile:38", e.getMessage());
 		}
 	}
 
@@ -56,10 +51,10 @@ public class ServeurOut{
 			out.writeObject(new String(message));
 			out.flush();
 		} catch (IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Main.log.ERROR("projet2A.Serveur.Main.ServeurOut.java:sendMessage:52", e.getMessage());
 		}
 	}
+	
 	public void sendState(Integer message){
 		try{
 			out.writeObject(message);

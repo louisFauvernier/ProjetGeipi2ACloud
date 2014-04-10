@@ -34,7 +34,7 @@ public class ServeurIn extends Thread {
 	
 	public void run(){
 		try {
-			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:35", "Lancement du serveur");
+			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:37", "Lancement du serveur");
 			socket = new ServerSocket(this.Port);
 		} catch (IOException e) {
 			StackTraceElement s = e.getStackTrace()[e.getStackTrace().length-1];
@@ -42,10 +42,10 @@ public class ServeurIn extends Thread {
 			System.exit(0);
 		}
 		while(true){
-			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:42", "En attente d'un client");
+			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:45", "En attente d'un client");
 			try {
 				s = socket.accept();
-				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:46", "Client Connecté");
+				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:48", "Client Connecté");
 				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
 				Object message_distant = "";
 				in = new ObjectInputStream(s.getInputStream());
@@ -56,11 +56,10 @@ public class ServeurIn extends Thread {
 				this.user = "";
 				in.close();
 				s.close();
-				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:55", "Client déconnecté");
+				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:59", "Client déconnecté");
 			} catch (IOException e) {
 				StackTraceElement s = e.getStackTrace()[e.getStackTrace().length-1];
-				Main.log.FATAL(s.getFileName() + ":" + s.getMethodName() + ":"
-						+ s.getLineNumber(), e.getMessage());
+				Main.log.FATAL("projet2A.Serveur.ServeurIn.java:run:" + s.getLineNumber(), e.getMessage());
 				this.user = "";
 			}
 		}
@@ -206,7 +205,6 @@ public class ServeurIn extends Thread {
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			Main.log.ERROR("projet2A.Serveur.ServeurIn.java:rcvFileList:224", e.getMessage());
-			e.printStackTrace();
 		}
 		sout.sendState(Constantes.CLIENT_SYNC_OK);
 	}

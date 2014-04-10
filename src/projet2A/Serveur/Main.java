@@ -32,7 +32,7 @@ public class Main{
 	
 	@SuppressWarnings("unchecked")
 	public static void loadFile(){
-		log.INFO("projet2A.Serveur.Main.java:loadFile:34", "Chargement des Utilisateurs sur le serveur");
+		log.INFO("projet2A.Serveur.Main.java:loadFile:38", "Chargement des Utilisateurs sur le serveur");
 		ObjectInputStream ois;
 		try {
 			File fichier =  new File("fileserv/listeUser.ser");
@@ -40,19 +40,19 @@ public class Main{
 			listeUsers = (ArrayList<User>)ois.readObject();
 	        ois.close();
 		} catch (IOException|ClassNotFoundException e) {
-			log.ERROR("projet2A.Serveur.Main.java:loadFile:37", e.getMessage());
+			log.ERROR("projet2A.Serveur.Main.java:loadFile:39", e.getMessage());
 		}
-		log.INFO("projet2A.Serveur.Main.java:loadFile:44", listeUsers.size() + " utilisateurs chargés");
-		log.INFO("projet2A.Serveur.Main.java:loadFile:45", "Chargement des index de fichiers");
+		log.INFO("projet2A.Serveur.Main.java:loadFile:45", listeUsers.size() + " utilisateurs chargés");
+		log.INFO("projet2A.Serveur.Main.java:loadFile:46", "Chargement des index de fichiers");
 		try {
 			File fichier =  new File("fileserv/listeFichier.ser");
 			ois = new ObjectInputStream(new FileInputStream(fichier));
 			listeFiles = (ArrayList<String>)ois.readObject();
 	        ois.close();
 		} catch (IOException|ClassNotFoundException e) {
-			log.ERROR("projet2A.Serveur.Main.java:loadFile:48", e.getMessage());	
+			log.ERROR("projet2A.Serveur.Main.java:loadFile:49", e.getMessage());	
 		}
-		log.INFO("projet2A.Serveur.Main.java:loadFile:54", listeFiles.size() + " index chargés");
+		log.INFO("projet2A.Serveur.Main.java:loadFile:55", listeFiles.size() + " index chargés");
 	}
 	
 	public static void saveFiles(){
@@ -76,9 +76,9 @@ public class Main{
 			oos = new ObjectOutputStream(new FileOutputStream(fichier));
 			oos.writeObject(listeUsers);
 			oos.close();
-			log.INFO("projet2A.Serveur.Main.java:saveUsers:75", "Succès");
+			log.INFO("projet2A.Serveur.Main.java:saveUsers:79", "Succès");
 		} catch (IOException e) {
-			log.ERROR("projet2A.Serveur.Main.java:saveUsers:73", e.getMessage());
+			log.ERROR("projet2A.Serveur.Main.java:saveUsers:77", e.getMessage());
 		}
 	}
 	
@@ -115,7 +115,7 @@ public class Main{
 		
 	}
 	public static void delete(File f){
-		System.out.println(f.getAbsolutePath());
+		System.out.println("Supression de " + f.getAbsolutePath());
 		if(f.isDirectory()){
 			String[] listeFichiers = new File(f.getAbsolutePath()).list();
 			for(int i=0;i<listeFichiers.length;i++){

@@ -79,19 +79,8 @@ public class ClientOut extends Thread{
 			out.writeObject(Constantes.CLIENT_CLOSECONNEXION);
 			out.flush();
 		} catch (IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
-	}
-	
-	/**
-	 * Création d'un objet fichier (uniquement pour un nouveau fichier)
-	 * @param name Nom du fichier
-	 * @return objet correspondant au fichier
-	 */
-	public Fichier newFile(String name){
-		// TODO
-		return null;
 	}
 	
 	/**
@@ -104,13 +93,12 @@ public class ClientOut extends Thread{
 			out.writeObject(f);
 			out.flush();
 		} catch (IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	
-	public String[] listeFichiers(String répertoire){
-		return new File(répertoire).list();
+	public String[] listeFichiers(String repertoire){
+		return new File(repertoire).list();
 	}
 	
 	public void send() throws IOException{
@@ -123,8 +111,7 @@ public class ClientOut extends Thread{
 			out.writeObject(new String(message));
 			out.flush();
 		} catch (IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	public void sendState(Integer message){
@@ -132,8 +119,7 @@ public class ClientOut extends Thread{
 			out.writeObject(message);
 			out.flush();
 		} catch (IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	public void createUser(String name, String pass){
@@ -141,8 +127,7 @@ public class ClientOut extends Thread{
 			out.writeBytes("create user " + name + " " + pass);
 			out.flush();
 		} catch (IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}	
 	}
 }
