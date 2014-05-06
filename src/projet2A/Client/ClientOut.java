@@ -10,13 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
 import projet2A.commonFiles.Constantes;
 import projet2A.commonFiles.Fichier;
 
-public class ClientOut extends Thread{
+public class ClientOut{
 	private Socket socket;
-	private int port = 8080;
+	private int port = 8000;
 	private String adresse;
 	private ObjectOutputStream out;
 	
@@ -38,23 +37,25 @@ public class ClientOut extends Thread{
 		this.port = port;
 	}
 	
-	public void run(){
+	public int connect(){
 		int nbtest = 5;
 		while(nbtest>0){ //Tentative de 5 connexions au maximum
 			try {
 				socket = new Socket(adresse, port);
 				System.out.println("[+] INFO : Connecté au serveur");
-				break;
+				return 1;
 			} catch (IOException e) {
 				if(nbtest==1){
 					if(socket == null){
 						System.out.println("[!] FATAL  : Impossible d'établir la connexion au serveur " + this.adresse); //Echec des 5 tentatives, arrêt du programme;
-						System.exit(0);
+						return 0;
+					}
+					else{
+						System.out.println("[-] ERREUR : " + e.getMessage() + ", Nouvel essai dans 5 secondes...");
 					}
 				}
-				System.out.println("[-] ERREUR : " + e.getMessage() + ", Nouvel essai dans 5 secondes...");
 				try {
-					sleep(5000); //Pause de 5 secondes avant nouvel essai
+					Thread.sleep(5000); //Pause de 5 secondes avant nouvel essai
 					nbtest--;
 				} catch (InterruptedException e1) {
 					System.out.println("[!] FATAL  : " + e1.getMessage());
@@ -62,16 +63,7 @@ public class ClientOut extends Thread{
 				}
 			}
 		}
-		try{
-			out = new ObjectOutputStream(socket.getOutputStream());
-			//createUser("louis", "test");
-			out.writeObject(Constantes.CLIENT_LOGIN);
-			out.flush();
-		} catch (IOException e) {
-			System.out.println("[!] FATAL  : " + e.getMessage());
-			e.printStackTrace();
-			System.exit(0);
-		}
+	return 0;
 	}
 	
 	public void close(){

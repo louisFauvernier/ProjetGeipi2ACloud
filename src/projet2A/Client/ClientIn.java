@@ -13,6 +13,8 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 import projet2A.commonFiles.Constantes;
 import projet2A.commonFiles.Fichier;
 
@@ -49,7 +51,6 @@ public class ClientIn extends Thread{
 			System.out.println("[+] INFO : Déconnexion du serveur");
 			cout.close();
 			s.close();
-			System.exit(0);
 		} catch (IOException e){
 			System.out.println("[-] Erreur : ");
 			e.printStackTrace();
@@ -86,7 +87,7 @@ public class ClientIn extends Thread{
 	public void traitementDemande(Object message_distant){
 		if(message_distant.getClass().equals(Constantes.CLIENT_LOGIN.getClass())){
 			if(message_distant.equals(Constantes.CLIENT_ID)){
-				cout.sendMessage("id louis test");
+				cout.sendMessage("id " + Main.login + " " + Main.password);
 			}
 			else if(message_distant.equals(Constantes.CLIENT_SYNC_OK)){
 				cout.sendState(Constantes.CLIENT_LOGOUT);
@@ -94,6 +95,17 @@ public class ClientIn extends Thread{
 			}
 			else if (message_distant.equals(Constantes.USER_SUCCESS_LOGIN)){
 				cout.sendState(Constantes.CLIENT_SYNC);
+			}
+			else if(message_distant.equals(Constantes.USER_FAILED_LOGIN)){
+				System.out.println("[-] ERREUR : Mauvais login/pasword");
+			}
+			else if (message_distant.equals(Constantes.USER_SUCCESS_CREATE)){
+				System.out.println("Compte créé avec succès");
+				cout.close();
+			}
+			else if (message_distant.equals(Constantes.USER_FAILED_CREATE)){
+				System.out.println("[-] ERREUR : Essayer avec un autre nom d'utilisateur");
+				cout.close();
 			}
 			else if (message_distant.equals(Constantes.FILE_SEND_LIST)){
 				try{
