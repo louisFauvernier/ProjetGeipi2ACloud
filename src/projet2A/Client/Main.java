@@ -6,6 +6,15 @@
 
 package projet2A.Client;
 
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,12 +34,38 @@ public class Main {
 	public static ClientOut cout;
 	public ClientIn cin;
 	public static String login, password;
+	private static SystemTray sysTray;
+	private static Image iconImage;
+	private static TrayIcon trayIcon;
+	private static PopupMenu menu;
+	private static MenuItem item1;
 	
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		loadIndexFile();
 		saveFiles();
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader in = new BufferedReader(isr);
+		
+		if(SystemTray.isSupported()){
+			sysTray = SystemTray.getSystemTray();
+			iconImage = Toolkit.getDefaultToolkit().getImage("src/projet2A/Client/maj.png");
+			menu = new PopupMenu();
+			item1 = new MenuItem("Exit");
+			menu.add(item1);
+			item1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				  System.exit(0);
+				  }
+				});
+			trayIcon = new TrayIcon(iconImage, "GeipiDrive", menu);
+			try {
+				sysTray.add(trayIcon);
+			} catch (AWTException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}	
+		ClientOut cout = new ClientOut("127.0.0.1");
 		while(true){
 			System.out.println(" -= GeipiDrive Client =-");
 			System.out.println("1 pour se connecter");
@@ -42,11 +77,13 @@ public class Main {
 				login = in.readLine();
 				System.out.print("Entrez votre mot de passe :");
 				password = in.readLine();
-				ClientOut cout = new ClientOut("127.0.0.1");
 				if(cout.connect() == 1){
 					ClientIn cin = new ClientIn(8001, cout);
 					cin.start();
 					cout.sendState(Constantes.CLIENT_LOGIN);
+				}
+				else{
+					Notification("Impossible d'établir une connexion au serveur", "Echec de connexion");
 				}
 			}
 			else if(action.equals("2")){
@@ -54,15 +91,20 @@ public class Main {
 				login = in.readLine();
 				System.out.print("Entrez votre mot de passe :");
 				password = in.readLine();
-				ClientOut cout = new ClientOut("127.0.0.1");
 				if(cout.connect() == 1){
 					ClientIn cin = new ClientIn(8001, cout);
 					cin.start();
 					cout.createUser(login, password);
 				}
+				else{
+					Notification("Impossible d'établir une connexion au serveur", "Echec de connexion");
+				}
 			}
 			else if(action.equals("3")){
-				break;
+				if(SystemTray.isSupported()){
+					sysTray.remove(trayIcon);
+				}
+				System.exit(0);
 			}
 		}
 	}
@@ -108,4 +150,7 @@ public class Main {
 			e.printStackTrace();		
 		}
 	}
+	 public static void Notification(String Text, String Title){
+		 trayIcon.displayMessage(Title,Text,TrayIcon.MessageType.INFO);
+	 }
 }

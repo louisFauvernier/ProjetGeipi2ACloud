@@ -43,12 +43,11 @@ public class ClientIn extends Thread{
 	}
 
 	public void run(){
-		System.out.println("Execution du client ...");
 		try{
 			while (!(message_distant = connected()).equals(Constantes.CLIENT_CLOSECONNEXION)){
 				traitementDemande(message_distant);
 			}
-			System.out.println("[+] INFO : Déconnexion du serveur");
+			socket.close();
 			cout.close();
 			s.close();
 		} catch (IOException e){
@@ -90,6 +89,7 @@ public class ClientIn extends Thread{
 				cout.sendMessage("id " + Main.login + " " + Main.password);
 			}
 			else if(message_distant.equals(Constantes.CLIENT_SYNC_OK)){
+				Main.Notification("Synchronisation terminée,  tous vos fichiers sont à jours", "Synchronisation terminée");
 				cout.sendState(Constantes.CLIENT_LOGOUT);
 				cout.sendState(Constantes.CLIENT_CLOSECONNEXION);
 			}
@@ -97,11 +97,16 @@ public class ClientIn extends Thread{
 				cout.sendState(Constantes.CLIENT_SYNC);
 			}
 			else if(message_distant.equals(Constantes.USER_FAILED_LOGIN)){
+				Main.Notification("Mauvais login/password", "Echec de connexion");
 				System.out.println("[-] ERREUR : Mauvais login/pasword");
+				cout.close();
 			}
 			else if (message_distant.equals(Constantes.USER_SUCCESS_CREATE)){
 				System.out.println("Compte créé avec succès");
 				cout.close();
+			}
+			else if(message_distant.equals(Constantes.USER_SUCCESS_LOGOUT)){
+				
 			}
 			else if (message_distant.equals(Constantes.USER_FAILED_CREATE)){
 				System.out.println("[-] ERREUR : Essayer avec un autre nom d'utilisateur");

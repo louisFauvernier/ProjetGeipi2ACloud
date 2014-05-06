@@ -26,7 +26,7 @@ public class Main{
 		log = new Logger();
 		loadFile();
 		//RAZServer();
-		sin = new ServeurIn(8080);
+		sin = new ServeurIn(8000);
 		sin.start();
 	}
 	

@@ -46,7 +46,7 @@ public class ServeurIn extends Thread {
 			try {
 				s = socket.accept();
 				Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:48", "Client Connecté");
-				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8081);
+				sout = new ServeurOut(s.getInetAddress().getHostAddress(),8001);
 				Object message_distant = "";
 				in = new ObjectInputStream(s.getInputStream());
 				while(!(message_distant = connected()).equals(Constantes.CLIENT_CLOSECONNEXION)){

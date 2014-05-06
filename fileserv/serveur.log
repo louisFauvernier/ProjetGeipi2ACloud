@@ -53,3 +53,27 @@
 				--== New Log Session ==--
 				--== New Log Session ==--
 				--== New Log Session ==--
+				--== New Log Session ==--
+2014-05-06 08:30:12 [FATAL] (ServeurIn.java:run:38) : Address already in use: JVM_Bind
+				--== New Log Session ==--
+2014-05-06 08:30:42 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21) : Connection refused: connect
+				--== New Log Session ==--
+2014-05-06 08:33:06 [FATAL] (projet2A.Serveur.ServeurIn.java:run:51) : Connection reset
+2014-05-06 08:36:04 [FATAL] (projet2A.Serveur.ServeurIn.java:run:51) : Connection reset
+2014-05-06 08:52:27 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Connection reset by peer: socket write error
+2014-05-06 08:53:00 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Connection reset by peer: socket write error
+2014-05-06 08:53:01 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21) : Connection refused: connect
+2014-05-06 08:53:01 [FATAL] (projet2A.Serveur.ServeurIn.java:run:51) : Connection reset
+2014-05-06 08:55:54 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Connection reset by peer: socket write error
+2014-05-06 08:55:55 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21) : Connection refused: connect
+2014-05-06 08:55:55 [FATAL] (projet2A.Serveur.ServeurIn.java:run:51) : Connection reset
+2014-05-06 08:57:18 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Connection reset by peer: socket write error
+2014-05-06 08:58:06 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Connection reset by peer: socket write error
+2014-05-06 08:59:34 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Connection reset by peer: socket write error
+2014-05-06 09:00:46 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21) : Connection refused: connect
+				--== New Log Session ==--
+2014-05-06 09:04:22 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21) : Connection refused: connect
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+2014-05-06 09:06:17 [FATAL] (ServeurIn.java:run:38) : Address already in use: JVM_Bind

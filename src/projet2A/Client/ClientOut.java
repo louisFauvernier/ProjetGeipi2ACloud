@@ -43,6 +43,7 @@ public class ClientOut{
 			try {
 				socket = new Socket(adresse, port);
 				System.out.println("[+] INFO : Connecté au serveur");
+				this.out = new ObjectOutputStream(socket.getOutputStream()); 
 				return 1;
 			} catch (IOException e) {
 				if(nbtest==1){
@@ -50,9 +51,9 @@ public class ClientOut{
 						System.out.println("[!] FATAL  : Impossible d'établir la connexion au serveur " + this.adresse); //Echec des 5 tentatives, arrêt du programme;
 						return 0;
 					}
-					else{
-						System.out.println("[-] ERREUR : " + e.getMessage() + ", Nouvel essai dans 5 secondes...");
-					}
+				}
+				else{
+					System.out.println("[-] ERREUR : " + e.getMessage() + ", Nouvel essai dans 5 secondes...");
 				}
 				try {
 					Thread.sleep(5000); //Pause de 5 secondes avant nouvel essai
@@ -70,6 +71,7 @@ public class ClientOut{
 		try{
 			out.writeObject(Constantes.CLIENT_CLOSECONNEXION);
 			out.flush();
+			out.close();
 		} catch (IOException e){
 			System.out.println(e.getMessage());
 		}
