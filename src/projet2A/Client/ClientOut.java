@@ -118,7 +118,7 @@ public class ClientOut{
 	}
 	public void createUser(String name, String pass){
 		try{
-			out.writeBytes("create user " + name + " " + pass);
+			out.writeObject(new String("create user " + name + " " + pass));
 			out.flush();
 		} catch (IOException e){
 			System.out.println(e.getMessage());

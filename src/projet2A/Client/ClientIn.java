@@ -13,8 +13,6 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import javax.swing.JOptionPane;
-
 import projet2A.commonFiles.Constantes;
 import projet2A.commonFiles.Fichier;
 
@@ -99,18 +97,18 @@ public class ClientIn extends Thread{
 			else if(message_distant.equals(Constantes.USER_FAILED_LOGIN)){
 				Main.Notification("Mauvais login/password", "Echec de connexion");
 				System.out.println("[-] ERREUR : Mauvais login/pasword");
-				cout.close();
+				cout.sendState(Constantes.CLIENT_CLOSECONNEXION);
 			}
 			else if (message_distant.equals(Constantes.USER_SUCCESS_CREATE)){
 				System.out.println("Compte créé avec succès");
-				cout.close();
+				cout.sendState(Constantes.CLIENT_CLOSECONNEXION);
 			}
 			else if(message_distant.equals(Constantes.USER_SUCCESS_LOGOUT)){
 				
 			}
 			else if (message_distant.equals(Constantes.USER_FAILED_CREATE)){
 				System.out.println("[-] ERREUR : Essayer avec un autre nom d'utilisateur");
-				cout.close();
+				cout.sendState(Constantes.CLIENT_CLOSECONNEXION);
 			}
 			else if (message_distant.equals(Constantes.FILE_SEND_LIST)){
 				try{
@@ -167,11 +165,10 @@ public class ClientIn extends Thread{
 		System.out.println("Ecriture du fichier " + f.getName() + "(" + f.getTaille() + "/"  +f.getContenu().length + ")");
 		FileOutputStream fos = new FileOutputStream("files/"+f.getName());
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
-		int b = 0, c = 4096;
+		System.out.println("Ecriture d'un fichier de " + f.getContenu().length + " bits");
+		int b = 0;
 		for(int i=0;i<f.getContenu().length;i++){
 			b = f.getContenu()[i];
-			if(b%c==0)
-				System.out.println("Copie en cours : " + i + "/");
             bos.write(b);
         }
         bos.flush();

@@ -1,59 +1,4 @@
 				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-2014-04-05 10:47:00 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Relais brisé (pipe)
-				--== New Log Session ==--
-2014-04-05 10:47:39 [FATAL] (ServeurIn.java:run:38) : Adresse déjà utilisée
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-2014-04-05 10:49:03 [FATAL] (ServeurIn.java:run:38) : Adresse déjà utilisée
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
-				--== New Log Session ==--
 2014-05-06 08:30:12 [FATAL] (ServeurIn.java:run:38) : Address already in use: JVM_Bind
 				--== New Log Session ==--
 2014-05-06 08:30:42 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21) : Connection refused: connect
@@ -77,3 +22,24 @@
 				--== New Log Session ==--
 				--== New Log Session ==--
 2014-05-06 09:06:17 [FATAL] (ServeurIn.java:run:38) : Address already in use: JVM_Bind
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+2014-05-07 10:34:49 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:ServeurOut:21) : Connection refused: connect
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+2014-05-07 10:45:55 [ERROR] (projet2A.Serveur.ServeurIn.java:rcvFileList:224) : fileserv\UsersFiles\louis\putty.exe.ser.ser (Le fichier spécifié est introuvable)
+2014-05-07 10:47:09 [ERROR] (projet2A.Serveur.Main.ServeurOut.java:sendState:70) : Connection reset by peer: socket write error
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--
+				--== New Log Session ==--

@@ -84,11 +84,13 @@ public class Main{
 	
 	public static int addNewUser(String name, String pass){
 		if(estInscrit(name)!= -1){
+			log.ERROR("projet2A.Serveur.Main.java:addNewUser:86", "Echec de la création de l'utilisateur nom déjà pris");
 			return 1;
 		}
 		listeUsers.add(new User(name, pass));
 		File dossier = new File("fileserv/UsersFiles/" + name);
 		dossier.mkdir();
+		log.INFO("projet2A.Serveur.Main.java:addNewUser:90", "Création de l'utilisateur " + name);
 		saveUsers();
 		return 0;
 	}

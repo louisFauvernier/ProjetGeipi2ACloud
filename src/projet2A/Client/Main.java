@@ -41,8 +41,6 @@ public class Main {
 	private static MenuItem item1;
 	
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		loadIndexFile();
-		saveFiles();
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader in = new BufferedReader(isr);
 		
@@ -73,6 +71,8 @@ public class Main {
 			System.out.println("3 pour quitter");
 			String action = in.readLine();
 			if(action.equals("1")){
+				loadIndexFile();
+				saveFiles();
 				System.out.print("Entrez votre identifiant :");
 				login = in.readLine();
 				System.out.print("Entrez votre mot de passe :");
@@ -125,13 +125,17 @@ public class Main {
 	
 	public static void listFile(){
 		String[] listeFichiers = new File("files").list();
+		HashMap<String, Fichier> listeFileTemp = new HashMap<String, Fichier> ();
 		try{
 			for(int i=0;i<listeFichiers.length;i++){
 				if(!listeFichiers[i].equals("listeFichier.ser")){
-					if(listeFile.containsKey(listeFichiers[i]))
+					if(listeFile.containsKey(listeFichiers[i])){
 						listeFile.get(listeFichiers[i]).updateFile();
-					else
-						listeFile.put(listeFichiers[i], new Fichier("files/" + listeFichiers[i]));
+						listeFileTemp.put(listeFichiers[i], listeFile.get(listeFichiers[i]));
+					}
+					else{
+						listeFileTemp.put(listeFichiers[i], new Fichier("files/" + listeFichiers[i]));
+					}
 				}
 			}
 		} catch (IOException e){

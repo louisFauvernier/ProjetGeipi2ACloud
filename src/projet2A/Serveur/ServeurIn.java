@@ -26,7 +26,7 @@ public class ServeurIn extends Thread {
 	private Socket s;
 	private ServeurOut sout;
 	private ObjectInputStream in;
-	private String user = "";
+	private static String user = "";
 	
 	public ServeurIn(int port){
 		this.Port = port;
@@ -170,25 +170,44 @@ public class ServeurIn extends Thread {
 		Main.saveFiles();
 	}
 	
+	public static String[] removefile(String fichier[], String name){
+		String temp[] = new String[fichier.length-1];
+		int j = 0;
+		for(int i=0;i<fichier.length;i++){
+			if(!(name + ".ser").equals(fichier[i])){
+				temp[j] = fichier[i];
+				j++;
+			}
+		}
+		return temp;
+	}
+
+	public static String[] listFile(){
+		String[] listeFichiers = new File("fileserv/UsersFiles/" + user).list();
+		return listeFichiers;
+	}
+
 	@SuppressWarnings("unchecked")
 	public void rcvFileList(){
 		int index;
+		String[] listeFichiers = listFile();
 		try {
 			sout.sendState(Constantes.FILE_SEND_LIST);
 			Object objetRecu = in.readObject();
-			HashMap<String, Fichier> listeFile = (HashMap<String, Fichier>) objetRecu;
+			HashMap<String, Fichier> listeFile = (HashMap<String, Fichier>) objetRecu; // Réception de la liste des fichiers présent sur le client.		
 			for(Iterator<String> ii = listeFile.keySet().iterator(); ii.hasNext();) {
 				String key = (String)ii.next();
-				Fichier f = listeFile.get(key);
-				System.out.println("Lecture du cache client -> " + f.getName() + " version:" + f.getVersion());
+				Fichier f = listeFile.get(key);			
+				System.out.println("Lecture du cache client -> " + f.getName() + " version:" + f.getVersion());			
 				index = getIndex("fileserv/UsersFiles/"+ this.user + "/" + f.getName() + ".ser");
 				if(index == -1){
 					System.out.println("Fichier non existant");
 					sout.sendMessage("send " + f.getName());
 					saveSerializedFile(rcvFile());
-				}
+				}		
 				else{
 					Fichier temp = DeserializeFichier(new File("fileserv/UsersFiles/"+ this.user + "/" + f.getName() + ".ser"));
+					listeFichiers = removefile(listeFichiers, temp.getName());
 					if(f.getVersion() > temp.getVersion()){
 						System.out.println("Version client plus récente");
 						sout.sendMessage("send " + f.getName());
@@ -202,6 +221,13 @@ public class ServeurIn extends Thread {
 						sout.sendFile(temp);
 					}
 				}
+				if(listeFichiers.length>1){
+					for(int i=0;i<listeFichiers.length;i++){
+						System.out.println("Fichier absent du client");
+						sout.sendMessage("receive " + listeFichiers[i]);
+						sout.sendFile(DeserializeFichier(new File("fileserv/UsersFiles/"+ this.user + "/" + listeFichiers[i])));
+					}
+				}			
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			Main.log.ERROR("projet2A.Serveur.ServeurIn.java:rcvFileList:224", e.getMessage());
