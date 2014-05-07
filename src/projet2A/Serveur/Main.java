@@ -6,10 +6,12 @@
 
 package projet2A.Serveur;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -28,6 +30,63 @@ public class Main{
 		//RAZServer();
 		sin = new ServeurIn(8000);
 		sin.start();
+		run();
+	}
+	
+	public static void run(){
+		InputStreamReader isr = new InputStreamReader(System.in);
+		BufferedReader in = new BufferedReader(isr);
+		String commande = "";
+		while(true){
+			try {
+				commande = in.readLine();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(commande.equals("exit")){
+				while(sin.isConnect()){
+					System.out.println("En attente de fermetrue des connexions");
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				System.exit(0);
+			}
+			else if(commande.equals("cat users")){
+				int n= listeUsers.size();
+				System.out.println(n + " utilisateur(s) est/sont enregistré(s) sur le serveur \n ---");
+				for(int i=0;i<n;i++){
+					System.out.println("-> " + listeUsers.get(i).getId());
+				}
+			}
+			else if(commande.equals("cat files")){
+				liste(new File("fileserv/UsersFiles"));
+			}
+			else if(commande.equals("about")){
+				System.out.println("\t\t --==  A propos de GeipiDrive Serveur ==--");
+				System.out.println("GeipiDrive Server est un serveur de fichiers dévellopé par FAUVERNIER Louis et MENET Nicolas");
+				System.out.println(" -> Version 1.00 build 37");
+				System.out.println(" -> Programme sous license GPLv3");
+			}
+			else{
+				System.out.println("Commande inconnue");
+			}
+		}
+	}
+	
+	public static void liste(File f){
+		if(f.isDirectory()){
+			String[] listeFichiers = new File(f.getAbsolutePath()).list();
+			for(int i=0;i<listeFichiers.length;i++){
+				liste(new File(f.getAbsolutePath()+"/" + listeFichiers[i]));
+			}
+		}
+		else
+			System.out.println("-->" + f.getAbsolutePath());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -84,7 +143,7 @@ public class Main{
 	
 	public static int addNewUser(String name, String pass){
 		if(estInscrit(name)!= -1){
-			log.ERROR("projet2A.Serveur.Main.java:addNewUser:86", "Echec de la création de l'utilisateur nom déjà pris ("+name+")");
+			log.ERROR("projet2A.Serveur.Main.java:addNewUser:86", "Echec de la création de l'utilisateur identifiant déjà utilisé ("+name+")");
 			return 1;
 		}
 		listeUsers.add(new User(name, pass));

@@ -32,6 +32,15 @@ public class ServeurIn extends Thread {
 		this.Port = port;
 	}
 	
+	public boolean isConnect(){
+		if(s == null)
+			return false;
+		if(s.isClosed())
+			return false;
+		else
+			return true;		
+	}
+	
 	public void run(){
 		try {
 			Main.log.INFO("projet2A.Serveur.ServeurIn.java:run:37", "Lancement du serveur");
@@ -115,7 +124,8 @@ public class ServeurIn extends Thread {
 				String tmp[] = message.split(" ");
 				int i = Main.estInscrit(tmp[1]);
 				if(i == -1 || !Main.listeUsers.get(i).getPassword().equals(tmp[2])){
-					sout.sendState(Constantes.USER_FAILED_LOGIN);					
+					sout.sendState(Constantes.USER_FAILED_LOGIN);
+					Main.log.INFO("projet2A.Serveur.ServeurIn:traitementDemande:126", "Echec de la connexion de l'utilisateur");
 				}
 				else{
 					sout.sendState(Constantes.USER_SUCCESS_LOGIN);
@@ -125,8 +135,9 @@ public class ServeurIn extends Thread {
 			else if(message.startsWith("create user")){
 				System.out.println("Client (" + s.getInetAddress() + ") demande : créer utilisateur");
 				String[] tmp = message.split(" ");
-				if(Main.addNewUser(tmp[2], tmp[3])==0)
+				if(Main.addNewUser(tmp[2], tmp[3])==0){
 					sout.sendState(Constantes.USER_SUCCESS_CREATE);
+				}
 				else
 					sout.sendState(Constantes.USER_FAILED_CREATE);
 			}
