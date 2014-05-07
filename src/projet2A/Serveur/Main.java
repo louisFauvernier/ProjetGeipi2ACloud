@@ -69,7 +69,7 @@ public class Main{
 			else if(commande.equals("about")){
 				System.out.println("\t\t --==  A propos de GeipiDrive Serveur ==--");
 				System.out.println("GeipiDrive Server est un serveur de fichiers dévellopé par FAUVERNIER Louis et MENET Nicolas");
-				System.out.println(" -> Version 1.00 build 37");
+				System.out.println(" -> Version 1.00 build 38");
 				System.out.println(" -> Programme sous license GPLv3");
 			}
 			else{

@@ -68,7 +68,8 @@ public class Main {
 			System.out.println(" -= GeipiDrive Client =-");
 			System.out.println("1 pour se connecter");
 			System.out.println("2 pour s'incrire");
-			System.out.println("3 pour quitter");
+			System.out.println("3 à propos");
+			System.out.println("4 pour quitter");
 			String action = in.readLine();
 			if(action.equals("1")){
 				loadIndexFile();
@@ -101,6 +102,12 @@ public class Main {
 				}
 			}
 			else if(action.equals("3")){
+				System.out.println("\t\t --==  A propos de GeipiDrive Client ==--");
+				System.out.println("GeipiDrive Client est un client pour le serveur GeipiDrive dévellopé par FAUVERNIER Louis et MENET Nicolas");
+				System.out.println(" -> Version 1.00 build 38");
+				System.out.println(" -> Programme sous license GPLv3");
+			}
+			else if(action.equals("4")){
 				if(SystemTray.isSupported()){
 					sysTray.remove(trayIcon);
 				}
