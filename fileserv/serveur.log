@@ -43,3 +43,5 @@
 				--== New Log Session ==--
 				--== New Log Session ==--
 				--== New Log Session ==--
+				--== New Log Session ==--
+2014-05-07 11:23:00 [ERROR] (projet2A.Serveur.Main.java:addNewUser:86) : Echec de la création de l'utilisateur nom déjà pris

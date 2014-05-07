@@ -84,7 +84,7 @@ public class Main{
 	
 	public static int addNewUser(String name, String pass){
 		if(estInscrit(name)!= -1){
-			log.ERROR("projet2A.Serveur.Main.java:addNewUser:86", "Echec de la création de l'utilisateur nom déjà pris");
+			log.ERROR("projet2A.Serveur.Main.java:addNewUser:86", "Echec de la création de l'utilisateur nom déjà pris ("+name+")");
 			return 1;
 		}
 		listeUsers.add(new User(name, pass));
